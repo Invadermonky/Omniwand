@@ -13,7 +13,7 @@ public class References {
 
     public static final Property ENABLE_TRANSFORM = new Property("enableTransforms", "true", Property.Type.BOOLEAN);
     public static final Property RESTRICT_TOOLTIP = new Property("restrictTooltip", "true", Property.Type.BOOLEAN);
-    public static final Property OFFHAND_TRANSFORM = new Property("offhandTransformsOnly", "false", Property.Type.BOOLEAN);
+    public static final Property OFFHAND_TRANSFORM = new Property("offhandTransformOnly", "false", Property.Type.BOOLEAN);
     public static final Property CROUCH_REVERT = new Property("crouchRevert", "false", Property.Type.BOOLEAN);
     public static final Property ALT_APPEARANCE = new Property("alternateAppearance", "false", Property.Type.BOOLEAN);
     public static final Property TRANSFORM_ITEMS = new Property("transformItems", "", Property.Type.STRING);
