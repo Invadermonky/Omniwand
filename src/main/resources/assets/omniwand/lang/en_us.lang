@@ -1,0 +1,10 @@
+#Localization files for Ominwand
+
+# Items
+item.omniwand:wand.name=Omniwand
+
+# Tooltips
+tooltip.omniwand:clickTransform=Shift right-click to change
+
+# Other
+omniwand:sudo_name=Omniwand (%s)

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "omniwand",
+  "name": "Omniwand",
+  "description": "The wand to end all wands.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/omniwand",
+  "updateUrl": "",
+  "authorList": ["Invadermonky"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
