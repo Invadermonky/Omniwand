@@ -44,9 +44,9 @@ public class References {
                                     "items are crafted into the wand. Only one transform item per mod can be stored in the Omniwand.\n\n" +
                                     "This will override the \"blacklistedMods\" setting.\n\n");
         TRANSFORM_ITEMS.setDefaultValues(new String[]{
-                "appliedenergistics:certus_quartz_wrench",
-                "appliedenergistics:nether_quartz_wrench",
-                "appliedenergistics:network_tool",
+                "appliedenergistics2:certus_quartz_wrench",
+                "appliedenergistics2:nether_quartz_wrench",
+                "appliedenergistics2:network_tool",
                 "astralsorcery:itemwand",
                 "botania:twigwand",
                 "draconicevolution:crystal_binder",
