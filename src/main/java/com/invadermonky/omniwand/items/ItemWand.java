@@ -6,6 +6,7 @@ import com.invadermonky.omniwand.handlers.TransformHandler;
 import com.invadermonky.omniwand.recipes.AttachmentRecipe;
 import com.invadermonky.omniwand.util.References;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,10 +78,8 @@ public class ItemWand extends Item {
 
                             if(ConfigHandler.restrictTooltip) {
                                 if(!currentMod.equals(mod) && TransformHandler.modNames.containsKey(key)) {
-                                    tooltip.add(TextFormatting.GREEN + TransformHandler.getModNameForId(mod));
-
                                     if (ConfigHandler.transformItems.contains(registryName) || ConfigHandler.transformItems.contains(registryName + ":" + modStack.getItemDamage())) {
-                                        name = " ┠>" + name;
+                                        name = TextFormatting.GREEN + TransformHandler.getModNameForId(mod) + TextFormatting.AQUA + " ┠> " + name;
                                         tooltip.add(name);
                                     }
                                 }
@@ -101,6 +100,8 @@ public class ItemWand extends Item {
                         }
                     }
                 }
+            } else {
+                tooltip.add(I18n.format("tooltip.omniwand:shiftinfo"));
             }
         }
     }
