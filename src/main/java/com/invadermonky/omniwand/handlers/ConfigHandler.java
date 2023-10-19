@@ -140,7 +140,7 @@ public class ConfigHandler {
     private static THashMap<String,String> getStringHashMap(String[] array) {
         THashMap<String,String> map = new THashMap<>();
         for(String entry : array) {
-            String[] split = entry.split("=>");
+            String[] split = entry.split("=");
             if(split.length != 2)
                 continue;
             map.put(split[0], split[1]);
