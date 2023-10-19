@@ -55,7 +55,7 @@ public class References {
                 "immersiveengineering:tool:0",
                 "mekanism:configurator",
                 "rftools:smartwrench",
-                "teslacore:wrench",
+                "teslacorelib:wrench",
                 "thermalfoundation:wrench"
         });
 
@@ -68,7 +68,7 @@ public class References {
                 "nautralpledge=botania",
                 "immersivetech=immersiveengineering",
                 "immersivepetrolium=immersiveengineering",
-                "industrialforegoing=teslacore",
+                "industrialforegoing=teslacorelib",
                 "redstonearsenal=thermalfoundation",
                 "thermalcultivation=thermalfoundation",
                 "thermaldynamics=thermalfoundation",
