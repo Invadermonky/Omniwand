@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,11 +55,11 @@ public class GuiWand extends GuiScreen {
         ScaledResolution res = new ScaledResolution(this.mc);
         int centerX = res.getScaledWidth() / 2;
         int centerY = res.getScaledHeight() / 2;
-        int amountPerRow = 8;
+        int amountPerRow = Math.min(12, Math.max(8, stacks.size() / 3));
         int rows = (int) Math.ceil((double) stacks.size() / amountPerRow);
         int iconSize = 20;
         int startX = centerX - amountPerRow * iconSize / 2;
-        int startY = centerY - rows * iconSize + 45;
+        int startY = centerY - rows * iconSize + Math.min(90, Math.max(40, 10 * rows));
         int padding = 4;
         int extra = 2;
 
