@@ -4,6 +4,9 @@
 Internal handling for both the wand logic and the configuration has changed. Be sure to remove all items from existing wands 
 before updating and resetting your configuration after updating.
 
+### Added
+- Added `zh_ch.lang` courtesy of mczph
+
 ### Removed
 - Removed the "staff" Omniwand appearance, the wand will now only use the "wand" appearance
 
