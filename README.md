@@ -24,4 +24,4 @@ The Omniwand with 42 different tools attached.
 
 ## Video Showcase
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/iCMVnNSxIZo?si=6ex8LB12kSpEE62m" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+https://www.youtube.com/embed/iCMVnNSxIZo?si=6ex8LB12kSpEE62m
