@@ -1,11 +1,9 @@
 package com.invadermonky.omniwand.recipes;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.handlers.ConfigHandler;
-import com.invadermonky.omniwand.handlers.TransformHandler;
-import com.invadermonky.omniwand.init.RegistryOW;
-import com.invadermonky.omniwand.util.NBTHelper;
-import com.invadermonky.omniwand.util.References;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.registry.Registry;
+import com.invadermonky.omniwand.util.WandHelper;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -14,124 +12,69 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.jetbrains.annotations.NotNull;
 
 public class AttachmentRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
     public AttachmentRecipe() {
-        setRegistryName(Omniwand.MOD_ID, "attachment");
+        this.setRegistryName(new ResourceLocation(Omniwand.MOD_ID, "attachment"));
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World worldIn) {
-        boolean foundTool = false;
+    public boolean matches(InventoryCrafting inv, @NotNull World worldIn) {
+        boolean foundWand = false;
         boolean foundTarget = false;
 
-        for(int i = 0; i < inv.getSizeInventory(); i++) {
+        for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
-
-            if(!stack.isEmpty()) {
-                if(this.isTarget(stack)) {
-
-                    if(foundTarget)
-                        return false;
-
+            if (!stack.isEmpty()) {
+                if (this.isTarget(stack) && !foundTarget) {
                     foundTarget = true;
+                } else if (stack.getItem() == Registry.OMNIWAND && !foundWand) {
+                    foundWand = true;
                 } else {
-                    if(stack.getItem() != RegistryOW.OMNIWAND || foundTool)
-                        return false;
-
-                    foundTool = true;
+                    return false;
                 }
             }
         }
-        return foundTool && foundTarget;
-    }
-
-    public boolean isTarget(ItemStack stack) {
-        if (!stack.isEmpty() && !TransformHandler.isOmniwand(stack)) {
-            String mod = TransformHandler.getModFromStack(stack);
-            ResourceLocation registryNameRL = stack.getItem().getRegistryName();
-            String registryName = registryNameRL.toString();
-
-            //If Minecraft
-            if (mod.equals(References.MINECRAFT)) {
-                return false;
-            }
-            //If Item is transform item
-            else if(ConfigHandler.transformItems.contains(registryName) || ConfigHandler.transformItems.contains(registryName + ":" + stack.getItemDamage())) {
-                return true;
-            }
-            //If Item whitelisted
-            else if (ConfigHandler.whitelistedItems.contains(registryName) || ConfigHandler.whitelistedItems.contains(registryName + ":" + stack.getItemDamage())) {
-                return true;
-            }
-            //If Mod blacklisted
-            else if (ConfigHandler.blacklistedMods.contains(mod)) {
-                return false;
-            }
-            //Name whitelist
-            else {
-                String itemName = registryNameRL.getPath().toLowerCase();
-                for(String name : ConfigHandler.whiteListedNames) {
-                    if(itemName.contains(name))
-                        return true;
-                }
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private boolean isTransform(ItemStack stack) {
-        if(stack.isEmpty())
-            return false;
-
-        String registryName = stack.getItem().getRegistryName().toString();
-        return ConfigHandler.transformItems.contains(registryName) || ConfigHandler.transformItems.contains(registryName + ":" + stack.getItemDamage());
+        return foundWand && foundTarget;
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
-        ItemStack tool = ItemStack.EMPTY;
+    public @NotNull ItemStack getCraftingResult(InventoryCrafting inv) {
+        ItemStack wand = ItemStack.EMPTY;
         ItemStack target = ItemStack.EMPTY;
 
-        for(int i = 0; i < inv.getSizeInventory(); i++) {
+        for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack stack = inv.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                if (stack.getItem() == RegistryOW.OMNIWAND)
-                    tool = stack;
-                else
+                if (stack.getItem() == Registry.OMNIWAND) {
+                    wand = stack;
+                } else {
                     target = stack;
+                }
             }
         }
 
-        ItemStack copy = tool.copy();
-        NBTTagCompound tagCompound = copy.getTagCompound();
-
-        if (tagCompound == null) {
-            tagCompound = new NBTTagCompound();
-            copy.setTagCompound(tagCompound);
-        }
-
-        if (!tagCompound.hasKey(References.TAG_WAND_DATA)) {
-            tagCompound.setTag(References.TAG_WAND_DATA, new NBTTagCompound());
-        }
-
-        NBTTagCompound transformData = tagCompound.getCompoundTag(References.TAG_WAND_DATA);
-        String mod = TransformHandler.getModFromStack(target);
+        ItemStack wandCopy = wand.copy();
+        NBTTagCompound wandData = WandHelper.getWandData(wandCopy);
+        String mod = WandHelper.getModOrAlias(target);
         String modClean = mod;
+        int i = 0;
+        if (!ConfigTags.isTransformItem(target))
+            mod = modClean + i++;
 
-        if(!isTransform(target) || transformData.hasKey(mod)) {
-            mod = modClean + 0;
-            for (int i = 1; transformData.hasKey(mod); i++) {
-                mod = modClean + i;
-            }
+        while (wandData.hasKey(mod)) {
+            mod = modClean + i++;
         }
 
-        NBTHelper.setString(target, References.TAG_ITEM_DEFINED_MOD, mod);
-        NBTTagCompound modCmp = new NBTTagCompound();
-        target.writeToNBT(modCmp);
-        transformData.setTag(mod, modCmp);
-        return copy;
+        WandHelper.setIsTransforming(target, false);
+        NBTTagCompound targetCmp = new NBTTagCompound();
+        target.writeToNBT(targetCmp);
+        wandData.setTag(mod, targetCmp);
+        WandHelper.setWandData(wandCopy, wandData);
+        WandHelper.setIsTransforming(wandCopy, false);
+        WandHelper.setAutoMode(wandCopy, true);
+        return wandCopy;
     }
 
     @Override
@@ -140,12 +83,20 @@ public class AttachmentRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+    public @NotNull NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+    }
+
+    public boolean isTarget(ItemStack stack) {
+        if (!stack.isEmpty() && stack.getCount() == 1 && !WandHelper.isOmniwand(stack)) {
+            String mod = WandHelper.getModOrAlias(stack);
+            return !mod.equals(Omniwand.MOD_ID) && ConfigTags.canItemStackAttach(stack);
+        }
+        return false;
     }
 }

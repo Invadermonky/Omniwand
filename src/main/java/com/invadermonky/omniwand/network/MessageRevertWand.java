@@ -1,9 +1,8 @@
 package com.invadermonky.omniwand.network;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.handlers.TransformHandler;
-import com.invadermonky.omniwand.init.RegistryOW;
-import com.invadermonky.omniwand.util.References;
+import com.invadermonky.omniwand.registry.Registry;
+import com.invadermonky.omniwand.util.WandHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,25 +12,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageRevertWand implements IMessage {
-    public MessageRevertWand() {}
+    public MessageRevertWand() {
+    }
 
     @Override
-    public void fromBytes(ByteBuf buf) {}
+    public void fromBytes(ByteBuf buf) {
+    }
 
     @Override
-    public void toBytes(ByteBuf buf) {}
+    public void toBytes(ByteBuf buf) {
+    }
 
-    public static class MsgHandler implements IMessageHandler<MessageRevertWand,IMessage> {
+    public static class MsgHandler implements IMessageHandler<MessageRevertWand, IMessage> {
         @Override
         public IMessage onMessage(MessageRevertWand message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
-            ItemStack stack = player.getHeldItemMainhand();
+            ctx.getServerHandler().player.server.addScheduledTask(() -> {
+                EntityPlayer player = ctx.getServerHandler().player;
+                ItemStack stack = player.getHeldItemMainhand();
 
-            if(stack != null && TransformHandler.isOmniwand(stack) && stack.getItem() != RegistryOW.OMNIWAND) {
-                ItemStack newStack = TransformHandler.getTransformStackForMod(stack, References.MINECRAFT);
-                player.setHeldItem(EnumHand.MAIN_HAND, newStack);
-                Omniwand.proxy.updateEquippedItem();
-            }
+                if (!stack.isEmpty() && WandHelper.isOmniwand(stack) && stack.getItem() != Registry.OMNIWAND) {
+                    ItemStack newStack = WandHelper.getTransformedStack(stack, Omniwand.MOD_ID, false);
+                    player.setHeldItem(EnumHand.MAIN_HAND, newStack);
+                }
+            });
             return null;
         }
     }

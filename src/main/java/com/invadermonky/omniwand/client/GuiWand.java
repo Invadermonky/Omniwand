@@ -1,10 +1,8 @@
 package com.invadermonky.omniwand.client;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.handlers.TransformHandler;
 import com.invadermonky.omniwand.network.MessageGuiTransform;
-import com.invadermonky.omniwand.util.NBTHelper;
-import com.invadermonky.omniwand.util.References;
+import com.invadermonky.omniwand.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,11 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.font.NumericShaper;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GuiWand extends GuiScreen {
     ItemStack wand;
@@ -35,77 +29,13 @@ public class GuiWand extends GuiScreen {
         this.wand = wand;
     }
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        ArrayList<ItemStack> stacks = new ArrayList<>();
-
-        if(this.wand.hasTagCompound()) {
-            NBTTagCompound data = this.wand.getTagCompound().getCompoundTag(References.TAG_WAND_DATA);
-            ArrayList<String> keys = new ArrayList<>(data.getKeySet());
-            Collections.sort(keys);
-
-            for(String key : keys) {
-                NBTTagCompound compoundTag = data.getCompoundTag(key);
-
-                if(compoundTag != null)
-                    stacks.add(new ItemStack(compoundTag));
-            }
-        }
-
-        ScaledResolution res = new ScaledResolution(this.mc);
-        int centerX = res.getScaledWidth() / 2;
-        int centerY = res.getScaledHeight() / 2;
-        int amountPerRow = Math.min(12, Math.max(8, stacks.size() / 3));
-        int rows = (int) Math.ceil((double) stacks.size() / amountPerRow);
-        int iconSize = 20;
-        int startX = centerX - amountPerRow * iconSize / 2;
-        int startY = centerY - rows * iconSize + Math.min(90, Math.max(40, 10 * rows));
-        int padding = 4;
-        int extra = 2;
-
-        drawRect(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 570425344);
-        drawRect(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 570425344);
-
-        ItemStack tooltipStack = ItemStack.EMPTY;
-
-        if(!stacks.isEmpty()) {
-            RenderHelper.enableGUIStandardItemLighting();
-
-            for(int i = 0; i < stacks.size(); i++) {
-                int x = startX + i % amountPerRow * iconSize;
-                int y = startY + i / amountPerRow * iconSize;
-                ItemStack stack = stacks.get(i);
-                if(mouseX > x && mouseY > y && mouseX <= x + 16 && mouseY <= y + 16) {
-                    tooltipStack = stack;
-                    y -= 2;
-                }
-                this.itemRender.renderItemAndEffectIntoGUI(stack, x, y);
-            }
-            RenderHelper.disableStandardItemLighting();
-        }
-
-        if(!tooltipStack.isEmpty()) {
-            String name = NBTHelper.getString(tooltipStack, References.TAG_WAND_DISPLAY_NAME, tooltipStack.getDisplayName());
-            String definedMod = TransformHandler.getModFromStack(tooltipStack);
-            String mod = TextFormatting.GRAY + TransformHandler.getModNameForId(definedMod);
-            definedMod = NBTHelper.getString(tooltipStack, References.TAG_ITEM_DEFINED_MOD, definedMod);
-            renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
-
-            if(Mouse.isButtonDown(0)) {
-                Omniwand.network.sendToServer(new MessageGuiTransform(definedMod));
-                TransformHandler.autoMode = false;
-                this.mc.displayGuiScreen(null);
-            }
-        }
-    }
-
     @SideOnly(Side.CLIENT)
     public static void renderTooltip(int x, int y, List<String> tooltipData) {
         int color1 = 1347420415;
         int color2 = -267386864;
 
         boolean lighting = GL11.glGetBoolean(2896);
-        if(lighting)
+        if (lighting)
             RenderHelper.disableStandardItemLighting();
 
         if (!tooltipData.isEmpty()) {
@@ -114,7 +44,7 @@ public class GuiWand extends GuiScreen {
 
             int var2;
             int var3;
-            for(var2 = 0; var2 < tooltipData.size(); ++var2) {
+            for (var2 = 0; var2 < tooltipData.size(); ++var2) {
                 var3 = fontRenderer.getStringWidth(tooltipData.get(var2));
                 if (var3 > var1) {
                     var1 = var3;
@@ -159,9 +89,9 @@ public class GuiWand extends GuiScreen {
 
             GlStateManager.disableDepth();
 
-            for(int i = 0; i < tooltipData.size(); i++) {
+            for (int i = 0; i < tooltipData.size(); i++) {
                 String tooltip = tooltipData.get(i);
-                fontRenderer.drawStringWithShadow(tooltip, (float)var2, (float)var3, -1);
+                fontRenderer.drawStringWithShadow(tooltip, (float) var2, (float) var3, -1);
                 if (i == 0) {
                     var3 += 2;
                 }
@@ -179,14 +109,14 @@ public class GuiWand extends GuiScreen {
 
     @SideOnly(Side.CLIENT)
     public static void drawGradientRect(int par1, int par2, float z, int par3, int par4, int par5, int par6) {
-        float red_1 = (float)(par5 >> 24 & 255) / 255.0F;
-        float green_1 = (float)(par5 >> 16 & 255) / 255.0F;
-        float blue_1 = (float)(par5 >> 8 & 255) / 255.0F;
-        float alpha_1 = (float)(par5 & 255) / 255.0F;
-        float red_2 = (float)(par6 >> 24 & 255) / 255.0F;
-        float green_2 = (float)(par6 >> 16 & 255) / 255.0F;
-        float blue_2 = (float)(par6 >> 8 & 255) / 255.0F;
-        float alpha_2 = (float)(par6 & 255) / 255.0F;
+        float red_1 = (float) (par5 >> 24 & 255) / 255.0F;
+        float green_1 = (float) (par5 >> 16 & 255) / 255.0F;
+        float blue_1 = (float) (par5 >> 8 & 255) / 255.0F;
+        float alpha_1 = (float) (par5 & 255) / 255.0F;
+        float red_2 = (float) (par6 >> 24 & 255) / 255.0F;
+        float green_2 = (float) (par6 >> 16 & 255) / 255.0F;
+        float blue_2 = (float) (par6 >> 8 & 255) / 255.0F;
+        float alpha_2 = (float) (par6 & 255) / 255.0F;
 
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
@@ -208,5 +138,69 @@ public class GuiWand extends GuiScreen {
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        Map<String, ItemStack> stackMap = new HashMap<>();
+
+        if (this.wand.hasTagCompound()) {
+            NBTTagCompound data = WandHelper.getWandData(this.wand);
+            ArrayList<String> keys = new ArrayList<>(data.getKeySet());
+            Collections.sort(keys);
+
+            for (String key : keys) {
+                NBTTagCompound compoundTag = data.getCompoundTag(key);
+
+                if (!compoundTag.isEmpty())
+                    stackMap.put(key, new ItemStack(compoundTag));
+            }
+        }
+
+        ScaledResolution res = new ScaledResolution(this.mc);
+        int centerX = res.getScaledWidth() / 2;
+        int centerY = res.getScaledHeight() / 2;
+        int amountPerRow = Math.min(12, Math.max(8, stackMap.size() / 3));
+        int rows = (int) Math.ceil((double) stackMap.size() / amountPerRow);
+        int iconSize = 20;
+        int startX = centerX - amountPerRow * iconSize / 2;
+        int startY = centerY - rows * iconSize + Math.min(90, Math.max(40, 10 * rows));
+        int padding = 4;
+        int extra = 2;
+
+        drawRect(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 570425344);
+        drawRect(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 570425344);
+
+        ItemStack tooltipStack = ItemStack.EMPTY;
+        String itemKey = "";
+
+        if (!stackMap.isEmpty()) {
+            RenderHelper.enableGUIStandardItemLighting();
+
+            int i = 0;
+            for (String key : stackMap.keySet()) {
+                int x = startX + i % amountPerRow * iconSize;
+                int y = startY + i / amountPerRow * iconSize;
+                i++;
+                if (mouseX > x && mouseY > y && mouseX <= x + 16 && mouseY <= y + 16) {
+                    tooltipStack = stackMap.get(key);
+                    itemKey = key;
+                    y -= 2;
+                }
+                this.itemRender.renderItemAndEffectIntoGUI(stackMap.get(key), x, y);
+            }
+            RenderHelper.disableStandardItemLighting();
+        }
+
+        if (!tooltipStack.isEmpty()) {
+            String name = WandHelper.getDisplayNameCache(tooltipStack);
+            String mod = TextFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
+            renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
+
+            if (Mouse.isButtonDown(0)) {
+                Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));
+                this.mc.displayGuiScreen(null);
+            }
+        }
     }
 }

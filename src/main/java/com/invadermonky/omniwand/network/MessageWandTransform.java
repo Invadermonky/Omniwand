@@ -1,7 +1,7 @@
 package com.invadermonky.omniwand.network;
 
-import com.invadermonky.omniwand.handlers.ConfigHandler;
-import com.invadermonky.omniwand.handlers.TransformHandler;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.util.WandHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,8 @@ public class MessageWandTransform implements IMessage {
     public ItemStack stack;
     public int slot;
 
-    public MessageWandTransform() {}
+    public MessageWandTransform() {
+    }
 
     public MessageWandTransform(ItemStack stack, int slot) {
         this.stack = stack;
@@ -33,15 +34,16 @@ public class MessageWandTransform implements IMessage {
         buf.writeInt(slot);
     }
 
-    public static class MsgHandler implements IMessageHandler<MessageWandTransform,IMessage> {
+    public static class MsgHandler implements IMessageHandler<MessageWandTransform, IMessage> {
         @Override
         public IMessage onMessage(MessageWandTransform message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
-            ItemStack heldItem = player.getHeldItem(ConfigHandler.getConfiguredHand());
+            ctx.getServerHandler().player.server.addScheduledTask(() -> {
+                EntityPlayer player = ctx.getServerHandler().player;
+                ItemStack heldItem = player.getHeldItem(ConfigTags.getConfiguredHand());
 
-            if(TransformHandler.isOmniwand(heldItem) && message.stack != heldItem && !ItemStack.areItemsEqual(message.stack, heldItem))
-                player.setHeldItem(ConfigHandler.getConfiguredHand(), message.stack);
-
+                if (WandHelper.isOmniwand(heldItem) && message.stack != heldItem && !ItemStack.areItemsEqual(message.stack, heldItem))
+                    player.setHeldItem(ConfigTags.getConfiguredHand(), message.stack);
+            });
             return null;
         }
     }
