@@ -1,5 +1,6 @@
 package com.invadermonky.omniwand.config;
 
+import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.LogHelper;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class ConfigTags {
     private static final THashMap<String, String> MOD_ALIASES = new THashMap<>();
+    private static final THashMap<String, String> NAME_OVERRIDES = new THashMap<>();
     private static final THashSet<String> TRANSFORM_ITEMS = new THashSet<>(3);
     private static final THashMap<String, THashSet<String>> BLACKLIST = new THashMap<>();
     private static final THashMap<String, THashSet<String>> WHITELIST = new THashMap<>();
@@ -26,12 +28,15 @@ public class ConfigTags {
      * @return Any registered alias for the passed mod id
      */
     public static String getModAlias(String modId) {
-
         return MOD_ALIASES.getOrDefault(modId, modId);
     }
 
+    public static String getNameOverride(String mod) {
+        return NAME_OVERRIDES.getOrDefault(mod, "");
+    }
+
     public static boolean isTransformItem(ItemStack stack) {
-        if (stack.isEmpty())
+        if (ItemHelper.isEmpty(stack))
             return false;
 
         String itemId = stack.getItem().getRegistryName().toString();
@@ -46,10 +51,10 @@ public class ConfigTags {
      */
     @SuppressWarnings("ConstantConditions")
     public static boolean canItemStackAttach(ItemStack stack) {
-        String itemMod = stack.getItem().getCreatorModId(stack);
+        String itemMod = stack.getItem().getRegistryName().getResourceDomain();
         String itemId = stack.getItem().getRegistryName().toString();
         String metaId = itemId + ":" + stack.getMetadata();
-        String itemName = stack.getItem().getRegistryName().getPath();
+        String itemName = stack.getItem().getRegistryName().getResourcePath();
 
         //If Transform Item
         if (TRANSFORM_ITEMS.contains(itemId) || TRANSFORM_ITEMS.contains(metaId)) {
@@ -107,6 +112,19 @@ public class ConfigTags {
         }
     }
 
+    private static void syncNameOverrides() {
+        NAME_OVERRIDES.clear();
+        Pattern pattern = Pattern.compile("^([^=]+)=([^=]+)$");
+        for (String alias : ConfigHandler.nameOverrides) {
+            Matcher matcher = pattern.matcher(alias);
+            if (matcher.find()) {
+                NAME_OVERRIDES.put(matcher.group(1), matcher.group(2));
+            } else {
+                LogHelper.error("Invalid name override string: " + alias);
+            }
+        }
+    }
+
     private static void syncTransformItems() {
         TRANSFORM_ITEMS.clear();
         Pattern pattern = Pattern.compile("^([^:\\s]+:[^:\\s]+:?\\d*)$");
@@ -153,6 +171,7 @@ public class ConfigTags {
 
     public static void syncConfig() {
         syncAliases();
+        syncNameOverrides();
         syncTransformItems();
         syncFilterList(BLACKLIST, ConfigHandler.attachBlacklist);
         syncFilterList(WHITELIST, ConfigHandler.attachWhitelist);

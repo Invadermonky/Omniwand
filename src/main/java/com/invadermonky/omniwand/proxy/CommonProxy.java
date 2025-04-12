@@ -4,6 +4,7 @@ import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.network.MessageGuiTransform;
 import com.invadermonky.omniwand.network.MessageRevertWand;
 import com.invadermonky.omniwand.network.MessageWandTransform;
+import com.invadermonky.omniwand.registry.Registry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,6 +23,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
+        Registry.registerRecipes();
     }
 
     public void postInit(FMLPostInitializationEvent event) {

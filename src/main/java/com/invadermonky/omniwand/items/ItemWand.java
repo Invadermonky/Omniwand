@@ -3,10 +3,10 @@ package com.invadermonky.omniwand.items;
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,11 +18,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,21 +27,19 @@ import java.util.List;
 public class ItemWand extends Item {
     public ItemWand() {
         this.setRegistryName(new ResourceLocation(Omniwand.MOD_ID, "wand"));
-        this.setTranslationKey(this.getRegistryName().toString());
+        this.setUnlocalizedName(this.getRegistryName().toString());
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.setMaxStackSize(1);
     }
 
     @Override
-    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, EntityPlayer playerIn, @NotNull EnumHand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull ItemStack stack, @NotNull World worldIn, @NotNull EntityPlayer playerIn, @NotNull EnumHand hand) {
         Omniwand.proxy.openWandGui(playerIn, stack);
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(@NotNull ItemStack wandStack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
+    public void addInformation(@NotNull ItemStack wandStack, @NotNull EntityPlayer playerIn, @NotNull List<String> tooltip, boolean advanced) {
         NBTTagCompound wandData = WandHelper.getWandData(wandStack);
         if (!wandData.getKeySet().isEmpty() && GuiScreen.isShiftKeyDown()) {
             List<String> keys = new ArrayList<>(wandData.getKeySet());
@@ -52,8 +47,8 @@ public class ItemWand extends Item {
             String currentMod = "";
 
             for (String key : keys) {
-                ItemStack storedItem = new ItemStack(wandData.getCompoundTag(key));
-                if (!storedItem.isEmpty()) {
+                ItemStack storedItem = ItemStack.loadItemStackFromNBT(wandData.getCompoundTag(key));
+                if (!ItemHelper.isEmpty(storedItem)) {
                     String name = WandHelper.getDisplayNameCache(storedItem);
                     String mod = WandHelper.getModOrAlias(storedItem);
                     if (ConfigHandler.restrictTooltip) {

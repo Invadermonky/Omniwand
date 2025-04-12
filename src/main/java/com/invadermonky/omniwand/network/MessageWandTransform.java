@@ -37,8 +37,8 @@ public class MessageWandTransform implements IMessage {
     public static class MsgHandler implements IMessageHandler<MessageWandTransform, IMessage> {
         @Override
         public IMessage onMessage(MessageWandTransform message, MessageContext ctx) {
-            ctx.getServerHandler().player.server.addScheduledTask(() -> {
-                EntityPlayer player = ctx.getServerHandler().player;
+            ctx.getServerHandler().playerEntity.mcServer.addScheduledTask(() -> {
+                EntityPlayer player = ctx.getServerHandler().playerEntity;
                 ItemStack heldItem = player.getHeldItem(ConfigTags.getConfiguredHand());
 
                 if (WandHelper.isOmniwand(heldItem) && message.stack != heldItem && !ItemStack.areItemsEqual(message.stack, heldItem))

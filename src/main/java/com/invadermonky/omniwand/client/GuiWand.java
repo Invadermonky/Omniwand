@@ -2,15 +2,16 @@ package com.invadermonky.omniwand.client;
 
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,7 +41,7 @@ public class GuiWand extends GuiScreen {
 
         if (!tooltipData.isEmpty()) {
             int var1 = 0;
-            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 
             int var2;
             int var3;
@@ -126,7 +127,7 @@ public class GuiWand extends GuiScreen {
 
         Tessellator tessellator = Tessellator.getInstance();
 
-        BufferBuilder buff = tessellator.getBuffer();
+        VertexBuffer buff = tessellator.getBuffer();
         buff.begin(7, DefaultVertexFormats.POSITION_COLOR);
         buff.pos(par3, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
         buff.pos(par1, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
@@ -152,8 +153,8 @@ public class GuiWand extends GuiScreen {
             for (String key : keys) {
                 NBTTagCompound compoundTag = data.getCompoundTag(key);
 
-                if (!compoundTag.isEmpty())
-                    stackMap.put(key, new ItemStack(compoundTag));
+                if (!compoundTag.getKeySet().isEmpty())
+                    stackMap.put(key, ItemStack.loadItemStackFromNBT(compoundTag));
             }
         }
 
@@ -171,7 +172,7 @@ public class GuiWand extends GuiScreen {
         drawRect(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 570425344);
         drawRect(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 570425344);
 
-        ItemStack tooltipStack = ItemStack.EMPTY;
+        ItemStack tooltipStack = null;
         String itemKey = "";
 
         if (!stackMap.isEmpty()) {
@@ -192,7 +193,7 @@ public class GuiWand extends GuiScreen {
             RenderHelper.disableStandardItemLighting();
         }
 
-        if (!tooltipStack.isEmpty()) {
+        if (!ItemHelper.isEmpty(tooltipStack)) {
             String name = WandHelper.getDisplayNameCache(tooltipStack);
             String mod = TextFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));

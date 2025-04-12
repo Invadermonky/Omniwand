@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 
 import java.util.function.Consumer;
 
@@ -17,7 +18,17 @@ import static com.invadermonky.omniwand.util.libs.LibTags.*;
 
 public class WandHelper {
     public static String getModName(String mod) {
-        return Loader.instance().getIndexedModList().containsKey(mod) ? Loader.instance().getIndexedModList().get(mod).getName() : "";
+        String name = ConfigTags.getNameOverride(mod);
+        if (!name.isEmpty()) {
+            return name;
+        }
+
+        ModContainer modContainer = Loader.instance().getIndexedModList().get(mod);
+        if (modContainer != null) {
+            name = modContainer.getName();
+            return !name.isEmpty() ? name : modContainer.getModId();
+        }
+        return "";
     }
 
     public static String getModOrAlias(String modId) {
@@ -25,19 +36,19 @@ public class WandHelper {
     }
 
     public static String getModOrAlias(ItemStack stack) {
-        return getModOrAlias(stack.getItem().getCreatorModId(stack));
+        return getModOrAlias(stack.getItem().getRegistryName().getResourceDomain());
     }
 
     public static String getModOrAlias(IBlockState state) {
-        return getModOrAlias(state.getBlock().getRegistryName().getNamespace());
+        return getModOrAlias(state.getBlock().getRegistryName().getResourceDomain());
     }
 
     public static boolean isOmniwand(ItemStack stack) {
-        return stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack);
+        return !ItemHelper.isEmpty(stack) && (stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack));
     }
 
     public static boolean isTransformedWand(ItemStack stack) {
-        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !getWandData(stack).isEmpty();
+        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !getWandData(stack).getKeySet().isEmpty();
     }
 
     /**
@@ -53,7 +64,7 @@ public class WandHelper {
         //Retrieving the item mod string, used for the wand data key
         String wandSlot = getModSlot(stack);
 
-        if (stack.isEmpty() || wandSlot.equals(mod) || !isOmniwand(stack))
+        if (ItemHelper.isEmpty(stack) || wandSlot.equals(mod) || !isOmniwand(stack))
             return stack;
 
         //Retrieving and copying the wand "inventory" data
@@ -81,7 +92,7 @@ public class WandHelper {
         //Creating or pulling new item from the wand
         ItemStack newStack;
         if (wandData.hasKey(mod) && !mod.equals(Omniwand.MOD_ID)) {
-            newStack = new ItemStack(wandData.getCompoundTag(mod));
+            newStack = ItemStack.loadItemStackFromNBT(wandData.getCompoundTag(mod));
             wandData.removeTag(mod);
         } else {
             newStack = new ItemStack(Registry.OMNIWAND);
@@ -113,7 +124,7 @@ public class WandHelper {
      * @return The reverted Omniwand item with the passed ItemStack removed.
      */
     public static ItemStack removeItemFromWand(ItemStack stack, boolean isBroken, Consumer<ItemStack> consumer) {
-        if (stack.isEmpty() || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND)
+        if (ItemHelper.isEmpty(stack) || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND)
             return stack;
 
         //Getting removed stack
@@ -150,7 +161,7 @@ public class WandHelper {
         if (stack.getDisplayName().equals(defaultName)) {
             tag.removeTag("display");
         }
-        if (tag.isEmpty()) {
+        if (tag.getKeySet().isEmpty()) {
             stack.setTagCompound(null);
         } else {
             stack.setTagCompound(tag);
