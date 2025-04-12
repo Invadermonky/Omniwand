@@ -10,7 +10,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
     modid = Omniwand.MOD_ID,
@@ -41,7 +40,6 @@ public class Omniwand {
     public void preInit(FMLPreInitializationEvent event) {
         LogHelper.info("Starting Omniwand.");
         ConfigHandler.init();
-        MinecraftForge.EVENT_BUS.register(new ConfigHandler.ConfigChangeListener());
         proxy.preInit(event);
         Registry.registerItems();
         LogHelper.debug("Finished preInit phase.");

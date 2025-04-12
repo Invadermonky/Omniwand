@@ -43,7 +43,7 @@ public class MessageGuiTransform implements IMessage {
 
             if (hasWand) {
                 ItemStack newStack = WandHelper.getTransformedStack(stack, message.modId, false);
-                player.setCurrentItemOrArmor(player.inventory.currentItem, newStack);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, newStack);
             }
             return null;
         }

@@ -18,7 +18,6 @@ import net.minecraftforge.client.event.MouseEvent;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMouseEvent(MouseEvent event) {
         EntityPlayerSP playerSP = Minecraft.getMinecraft().thePlayer;

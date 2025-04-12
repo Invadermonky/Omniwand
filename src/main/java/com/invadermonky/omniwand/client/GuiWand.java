@@ -21,7 +21,6 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 
 public class GuiWand extends GuiScreen {
-
     ItemStack wand;
 
     public GuiWand(ItemStack wand) {

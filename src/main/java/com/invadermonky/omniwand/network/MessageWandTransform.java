@@ -44,7 +44,7 @@ public class MessageWandTransform implements IMessage {
 
             if (WandHelper.isOmniwand(heldItem) && message.stack != heldItem
                 && !ItemHelper.areItemsEqual(message.stack, heldItem))
-                player.setCurrentItemOrArmor(player.inventory.currentItem, message.stack);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, message.stack);
             return null;
         }
     }

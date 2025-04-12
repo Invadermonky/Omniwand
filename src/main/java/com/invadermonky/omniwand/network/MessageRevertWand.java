@@ -33,7 +33,7 @@ public class MessageRevertWand implements IMessage {
 
             if (!ItemHelper.isEmpty(stack) && WandHelper.isOmniwand(stack) && stack.getItem() != Registry.OMNIWAND) {
                 ItemStack newStack = WandHelper.getTransformedStack(stack, Omniwand.MOD_ID, false);
-                player.setCurrentItemOrArmor(player.inventory.currentItem, newStack);
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, newStack);
             }
             return null;
         }

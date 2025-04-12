@@ -12,7 +12,6 @@ import net.minecraftforge.common.config.Configuration;
 import java.util.Set;
 
 public class GuiFactory implements IModGuiFactory {
-
     @Override
     public void initialize(Minecraft minecraftInstance) {
     }
@@ -37,7 +36,7 @@ public class GuiFactory implements IModGuiFactory {
         public OmniwandConfig(GuiScreen parentScreen) {
             super(
                 parentScreen,
-                new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+                new ConfigElement<>(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
                 Omniwand.MOD_ID,
                 false,
                 false,

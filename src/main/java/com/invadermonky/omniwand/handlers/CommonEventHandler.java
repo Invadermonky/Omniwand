@@ -11,7 +11,6 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 public class CommonEventHandler {
-
     @SubscribeEvent
     public void onItemBroken(PlayerDestroyItemEvent event) {
         EntityPlayer player = event.entityPlayer;

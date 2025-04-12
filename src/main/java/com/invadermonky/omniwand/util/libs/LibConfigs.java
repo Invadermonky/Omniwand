@@ -20,25 +20,23 @@ public class LibConfigs {
         "ae2stuff=appliedenergistics2",
         "animus=bloodmagic",
         "bloodarsenal=bloodmagic",
-        "buildcrafttransport=buildcraft",
-        "buildcraftfactory=buildcraft",
-        "buildcraftsilicon=buildcraft",
+        "BuildCraft|Builders=BuildCraft|Core",
+        "BuildCraft|Factory=BuildCraft|Core",
+        "BuildCraft|Robotics=BuildCraft|Core",
+        "BuildCraft|Silicon=BuildCraft|Core",
+        "BuildCraft|Transport=BuildCraft|Core",
         "deepresonance=rftools",
-        "immersivetech=immersiveengineering",
-        "immersivepetrolium=immersiveengineering",
-        "industrialforegoing=teslacorelib",
-        "integrateddynamics=integratedtunnels",
         "mekanismgenerators=mekanism",
         "mekanismtools=mekanism",
-        "redstonearsenal=thermalfoundation",
+        "RedstoneArsenal=ThermalExpansion",
         "rftoolsdim=rftools",
         "rftoolspower=rftools",
         "rftoolscontrol=rftools",
-        "thermalcultivation=thermalfoundation",
-        "thermaldynamics=thermalfoundation",
-        "thermalexpansion=thermalfoundation",
+        "ThermalDynamics=ThermalExpansion",
+        "ThermalFoundation=ThermalExpansion",
         "threng=appliedenergistics2",
-        "xnet=rftools"};
+        "xnet=rftools"
+    };
 
     public static String transformItemsName = "Transform Items";
     public static String transformItemsComment = """
@@ -48,21 +46,22 @@ public class LibConfigs {
                   Format: modid:item_id
         """;
     public static String[] transformItemsDefault = new String[]{
-        "appliedenergistics2:certus_quartz_wrench",
-        "appliedenergistics2:nether_quartz_wrench",
-        "appliedenergistics2:network_tool",
-        "astralsorcery:itemwand",
+        "appliedenergistics2:item.ToolNetherQuartzWrench",
+        "appliedenergistics2:item.ToolNetherCertusWrench",
+        "appliedenergistics2:item.ToolNetworkTool",
         "Botania:twigWand",
-        "draconicevolution:crystal_binder",
-        "embers:tinker_hammer",
-        "environmentaltech:tool_multiblock_assembler",
-        "immersiveengineering:tool:0",
-        "enderio:item_yeta_wrench",
+        "BuildCraft|Core:wrenchItem",
+        "DraconicEvolution:wrench",
+        "EnderIO:itemYetaWrench",
+        "ImmersiveEngineering:tool:0",
         "mekanism:configurator",
-        "naturesaura:range_visualizer",
+        "MineFactoryReloaded:hammer",
+        "RedstoneArsenal:tool.wrenchFlux",
+        "RedstoneArsenal:tool.battleWrenchFlux",
         "rftools:smartWrenchItem",
-        "teslacorelib:wrench",
-        "thermalfoundation:wrench"};
+        "ThermalExpansion:wrench",
+        "ThermalExpansion:tool.battleWrenchInvar"
+    };
 
     public static String attachBlacklistName = "Item Blacklist";
     public static String attachBlacklistComment = """
@@ -89,7 +88,6 @@ public class LibConfigs {
         ""
         """;
     public static String[] attachBlacklistDefault = new String[]{
-        "mod=intangible",
         "mod=immersiveengineering",
         "mod=tconstruct"
     };
@@ -119,6 +117,8 @@ public class LibConfigs {
         ""
         """;
     public static String[] attachWhitelistDefault = new String[]{
+        "item=EnderIO:itemConduitProbe",
+        "item=Botania:obedienceStick",
         "name=configurator",
         "name=crowbar",
         "name=hammer",

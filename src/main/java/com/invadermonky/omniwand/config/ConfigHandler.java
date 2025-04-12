@@ -3,6 +3,7 @@ package com.invadermonky.omniwand.config;
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.util.libs.LibConfigs;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.common.config.Configuration;
@@ -26,6 +27,7 @@ public class ConfigHandler {
         config = new Configuration(configFile);
         config.load();
         syncConfig();
+        FMLCommonHandler.instance().bus().register(new ConfigChangeListener());
     }
 
     public static void syncConfig() {
@@ -43,7 +45,6 @@ public class ConfigHandler {
     }
 
     public static class ConfigChangeListener {
-
         @SubscribeEvent
         public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.modID.equals(Omniwand.MOD_ID)) {
