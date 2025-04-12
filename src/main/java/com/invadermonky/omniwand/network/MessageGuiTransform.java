@@ -1,21 +1,23 @@
 package com.invadermonky.omniwand.network;
 
-import com.invadermonky.omniwand.registry.Registry;
-import com.invadermonky.omniwand.util.WandHelper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import com.invadermonky.omniwand.registry.Registry;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 
 public class MessageGuiTransform implements IMessage {
+
     public String modId;
 
-    public MessageGuiTransform() {
-    }
+    public MessageGuiTransform() {}
 
     public MessageGuiTransform(String modId) {
         this.modId = modId;
@@ -32,26 +34,18 @@ public class MessageGuiTransform implements IMessage {
     }
 
     public static class MsgHandler implements IMessageHandler<MessageGuiTransform, IMessage> {
+
         @Override
         public IMessage onMessage(MessageGuiTransform message, MessageContext ctx) {
-            ctx.getServerHandler().player.server.addScheduledTask(() -> {
-                EntityPlayer player = ctx.getServerHandler().player;
-                ItemStack stack = player.getHeldItemMainhand();
-                EnumHand hand = EnumHand.MAIN_HAND;
+            EntityPlayer player = ctx.getServerHandler().playerEntity;
+            ItemStack stack = player.getHeldItem();
 
-                boolean hasWand = !stack.isEmpty() && stack.getItem() == Registry.OMNIWAND;
+            boolean hasWand = !ItemHelper.isEmpty(stack) && stack.getItem() == Registry.OMNIWAND;
 
-                if (!hasWand) {
-                    stack = player.getHeldItemOffhand();
-                    hasWand = !stack.isEmpty() && stack.getItem() == Registry.OMNIWAND;
-                    hand = EnumHand.OFF_HAND;
-                }
-
-                if (hasWand) {
-                    ItemStack newStack = WandHelper.getTransformedStack(stack, message.modId, false);
-                    player.setHeldItem(hand, newStack);
-                }
-            });
+            if (hasWand) {
+                ItemStack newStack = WandHelper.getTransformedStack(stack, message.modId, false);
+                player.setCurrentItemOrArmor(player.inventory.currentItem, newStack);
+            }
             return null;
         }
     }

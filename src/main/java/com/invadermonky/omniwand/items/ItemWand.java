@@ -1,74 +1,74 @@
 package com.invadermonky.omniwand.items;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
-import com.invadermonky.omniwand.config.ConfigTags;
-import com.invadermonky.omniwand.util.WandHelper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWand extends Item {
+
     public ItemWand() {
-        this.setRegistryName(new ResourceLocation(Omniwand.MOD_ID, "wand"));
-        this.setTranslationKey(this.getRegistryName().toString());
-        this.setCreativeTab(CreativeTabs.TOOLS);
+        this.setUnlocalizedName("item.omniwand:wand.name");
+        this.setTextureName("omniwand:items/wand");
+        this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
     }
 
     @Override
-    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, EntityPlayer playerIn, @NotNull EnumHand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        Omniwand.proxy.openWandGui(playerIn, stack);
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player) {
+        ItemStack stack = player.getHeldItem();
+        Omniwand.proxy.openWandGui(player, stack);
+        return stack;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(@NotNull ItemStack wandStack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
+    public void addInformation(ItemStack wandStack, EntityPlayer player, List<String> tooltip, boolean p_77624_4_) {
         NBTTagCompound wandData = WandHelper.getWandData(wandStack);
-        if (!wandData.getKeySet().isEmpty() && GuiScreen.isShiftKeyDown()) {
-            List<String> keys = new ArrayList<>(wandData.getKeySet());
+        if (!ItemHelper.isEmpty(wandData) && GuiScreen.isShiftKeyDown()) {
+            List<String> keys = new ArrayList<>(wandData.func_150296_c());
             Collections.sort(keys);
             String currentMod = "";
 
             for (String key : keys) {
-                ItemStack storedItem = new ItemStack(wandData.getCompoundTag(key));
-                if (!storedItem.isEmpty()) {
+                ItemStack storedItem = ItemStack.loadItemStackFromNBT(wandData.getCompoundTag(key));
+                if (!ItemHelper.isEmpty(storedItem)) {
                     String name = WandHelper.getDisplayNameCache(storedItem);
                     String mod = WandHelper.getModOrAlias(storedItem);
                     if (ConfigHandler.restrictTooltip) {
                         if (mod.equals(key) && ConfigTags.isTransformItem(storedItem)) {
-                            name = TextFormatting.GREEN + WandHelper.getModName(mod) + TextFormatting.AQUA + " ┠> " + name;
+                            name = EnumChatFormatting.GREEN + WandHelper.getModName(mod)
+                                + EnumChatFormatting.AQUA
+                                + " ┠> "
+                                + name;
                             tooltip.add(name);
                         }
                     } else {
-                        //If current mod is not equal to new mod, adds a new header
+                        // If current mod is not equal to new mod, adds a new header
                         if (!currentMod.equals(mod)) {
                             currentMod = mod;
-                            tooltip.add(TextFormatting.GREEN + WandHelper.getModName(currentMod));
+                            tooltip.add(EnumChatFormatting.GREEN + WandHelper.getModName(currentMod));
                         }
 
-                        name = (key.equals(mod) ? TextFormatting.AQUA + " ┠>" : " ┠ ") + name;
+                        name = (key.equals(mod) ? EnumChatFormatting.AQUA + " ┠>" : " ┠ ") + name;
                         tooltip.add(name);
                     }
                 }

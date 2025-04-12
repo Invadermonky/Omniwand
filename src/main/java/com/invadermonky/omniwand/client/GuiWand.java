@@ -1,28 +1,30 @@
 package com.invadermonky.omniwand.client;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.network.MessageGuiTransform;
-import com.invadermonky.omniwand.util.WandHelper;
+import java.util.*;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumChatFormatting;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class GuiWand extends GuiScreen {
+
     ItemStack wand;
 
     public GuiWand(ItemStack wand) {
@@ -35,8 +37,7 @@ public class GuiWand extends GuiScreen {
         int color2 = -267386864;
 
         boolean lighting = GL11.glGetBoolean(2896);
-        if (lighting)
-            RenderHelper.disableStandardItemLighting();
+        if (lighting) RenderHelper.disableStandardItemLighting();
 
         if (!tooltipData.isEmpty()) {
             int var1 = 0;
@@ -58,7 +59,8 @@ public class GuiWand extends GuiScreen {
                 var4 += 2 + (tooltipData.size() - 1) * 10;
             }
 
-            ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+            Minecraft mc = Minecraft.getMinecraft();
+            ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             int right = var2 + var1 + 5;
             int scaledWidth = res.getScaledWidth();
             int bottom;
@@ -87,24 +89,24 @@ public class GuiWand extends GuiScreen {
             drawGradientRect(var2 - 3, var3 - 3, z, var2 + var1 + 3, var3 - 3 + 1, color1, color1);
             drawGradientRect(var2 - 3, var3 + var4 + 2, z, var2 + var1 + 3, var3 + var4 + 3, var5, var5);
 
-            GlStateManager.disableDepth();
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
 
             for (int i = 0; i < tooltipData.size(); i++) {
                 String tooltip = tooltipData.get(i);
-                fontRenderer.drawStringWithShadow(tooltip, (float) var2, (float) var3, -1);
+                fontRenderer.drawStringWithShadow(tooltip, var2, var3, -1);
                 if (i == 0) {
                     var3 += 2;
                 }
 
                 var3 += 10;
             }
-            GlStateManager.enableDepth();
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
         }
 
-        if (!lighting)
-            RenderHelper.disableStandardItemLighting();
+        if (!lighting) RenderHelper.disableStandardItemLighting();
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        // GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @SideOnly(Side.CLIENT)
@@ -118,46 +120,63 @@ public class GuiWand extends GuiScreen {
         float blue_2 = (float) (par6 >> 8 & 255) / 255.0F;
         float alpha_2 = (float) (par6 & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.blendFunc(770, 771);
-        GlStateManager.shadeModel(7425);
+        GL11.glDisable(GL11.GL_TEXTURE);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        // GlStateManager.disableTexture2D();
+        // GlStateManager.enableBlend();
+        // GlStateManager.disableAlpha();
+        // GlStateManager.blendFunc(770, 771);
+        // GlStateManager.shadeModel(7425);
 
-        Tessellator tessellator = Tessellator.getInstance();
+        Tessellator tessellator = Tessellator.instance;
 
-        BufferBuilder buff = tessellator.getBuffer();
-        buff.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        buff.pos(par3, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
-        buff.pos(par1, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
-        buff.pos(par1, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
-        buff.pos(par3, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
+        tessellator.startDrawing(7);
+        tessellator.setColorRGBA_F(green_1, blue_1, alpha_1, red_1);
+        tessellator.addVertex(par3, par2, z);
+        tessellator.addVertex(par1, par2, z);
+        tessellator.setColorRGBA_F(green_2, blue_2, alpha_2, red_2);
+        tessellator.addVertex(par1, par4, z);
+        tessellator.addVertex(par3, par4, z);
+
+        // BufferBuilder buff = tessellator.getBuffer();
+        // buff.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        // buff.pos(par3, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
+        // buff.pos(par1, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
+        // buff.pos(par1, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
+        // buff.pos(par3, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
 
         tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glEnable(GL11.GL_ALPHA);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE);
+        // GlStateManager.shadeModel(7424);
+        // GlStateManager.disableBlend();
+        // GlStateManager.enableAlpha();
+        // GlStateManager.enableTexture2D();
     }
 
+    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         Map<String, ItemStack> stackMap = new HashMap<>();
 
         if (this.wand.hasTagCompound()) {
             NBTTagCompound data = WandHelper.getWandData(this.wand);
-            ArrayList<String> keys = new ArrayList<>(data.getKeySet());
+            ArrayList<String> keys = new ArrayList<>(data.func_150296_c());
             Collections.sort(keys);
 
             for (String key : keys) {
                 NBTTagCompound compoundTag = data.getCompoundTag(key);
 
-                if (!compoundTag.isEmpty())
-                    stackMap.put(key, new ItemStack(compoundTag));
+                if (!ItemHelper.isEmpty(compoundTag)) stackMap.put(key, ItemStack.loadItemStackFromNBT(compoundTag));
             }
         }
 
-        ScaledResolution res = new ScaledResolution(this.mc);
+        ScaledResolution res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
         int centerX = res.getScaledWidth() / 2;
         int centerY = res.getScaledHeight() / 2;
         int amountPerRow = Math.min(12, Math.max(8, stackMap.size() / 3));
@@ -168,10 +187,20 @@ public class GuiWand extends GuiScreen {
         int padding = 4;
         int extra = 2;
 
-        drawRect(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 570425344);
-        drawRect(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 570425344);
+        drawRect(
+            startX - padding,
+            startY - padding,
+            startX + iconSize * amountPerRow + padding,
+            startY + iconSize * rows + padding,
+            570425344);
+        drawRect(
+            startX - padding - extra,
+            startY - padding - extra,
+            startX + iconSize * amountPerRow + padding + extra,
+            startY + iconSize * rows + padding + extra,
+            570425344);
 
-        ItemStack tooltipStack = ItemStack.EMPTY;
+        ItemStack tooltipStack = null;
         String itemKey = "";
 
         if (!stackMap.isEmpty()) {
@@ -187,15 +216,20 @@ public class GuiWand extends GuiScreen {
                     itemKey = key;
                     y -= 2;
                 }
-                this.itemRender.renderItemAndEffectIntoGUI(stackMap.get(key), x, y);
+                ItemStack stack = stackMap.get(key);
+                if (!ItemHelper.isEmpty(stack)) {
+                    FontRenderer font = stack.getItem().getFontRenderer(stack);
+                    if (font == null) font = this.fontRendererObj;
+                    itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
+                }
             }
             RenderHelper.disableStandardItemLighting();
         }
 
-        if (!tooltipStack.isEmpty()) {
+        if (!ItemHelper.isEmpty(tooltipStack)) {
             String name = WandHelper.getDisplayNameCache(tooltipStack);
-            String mod = TextFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
-            renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
+            String mod = EnumChatFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
+            //renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
                 Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));

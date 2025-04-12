@@ -1,23 +1,32 @@
 package com.invadermonky.omniwand.util;
 
+import static com.invadermonky.omniwand.util.libs.LibTags.*;
+
+import java.util.function.Consumer;
+
+import cpw.mods.fml.common.ModContainer;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.registry.Registry;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.Loader;
 
-import java.util.function.Consumer;
-
-import static com.invadermonky.omniwand.util.libs.LibTags.*;
+import cpw.mods.fml.common.Loader;
 
 public class WandHelper {
+
     public static String getModName(String mod) {
-        return Loader.instance().getIndexedModList().containsKey(mod) ? Loader.instance().getIndexedModList().get(mod).getName() : "";
+        ModContainer modContainer = Loader.instance().getIndexedModList().get(mod);
+        if(modContainer != null) {
+            String name = modContainer.getName();
+            return !name.isEmpty() ? name : modContainer.getModId();
+        }
+        return "";
     }
 
     public static String getModOrAlias(String modId) {
@@ -25,19 +34,20 @@ public class WandHelper {
     }
 
     public static String getModOrAlias(ItemStack stack) {
-        return getModOrAlias(stack.getItem().getCreatorModId(stack));
+        return getModOrAlias(ItemHelper.getOwnerMod(stack));
     }
 
-    public static String getModOrAlias(IBlockState state) {
-        return getModOrAlias(state.getBlock().getRegistryName().getNamespace());
+    public static String getModOrAlias(Block block) {
+        return getModOrAlias(ItemHelper.getOwnerMod(block));
     }
 
     public static boolean isOmniwand(ItemStack stack) {
-        return stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack);
+        return !ItemHelper.isEmpty(stack) && (stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack));
     }
 
     public static boolean isTransformedWand(ItemStack stack) {
-        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !getWandData(stack).isEmpty();
+        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack)
+            && !ItemHelper.isEmpty(getWandData(stack));
     }
 
     /**
@@ -50,54 +60,55 @@ public class WandHelper {
      * @return The newly transformed wand ItemStack
      */
     public static ItemStack getTransformedStack(ItemStack stack, String mod, boolean removeStack) {
-        //Retrieving the item mod string, used for the wand data key
+        // Retrieving the item mod string, used for the wand data key
         String wandSlot = getModSlot(stack);
 
-        if (stack.isEmpty() || wandSlot.equals(mod) || !isOmniwand(stack))
+        if (ItemHelper.isEmpty(stack) || wandSlot.equals(mod) || !isOmniwand(stack))
             return stack;
 
-        //Retrieving and copying the wand "inventory" data
-        NBTTagCompound wandData = getWandData(stack).copy();
+        // Retrieving and copying the wand "inventory" data
+        NBTTagCompound wandData = (NBTTagCompound) getWandData(stack).copy();
 
-        //If no transform item is found on wand, resets it to default "omniwand"
+        // If no transform item is found on wand, resets it to default "omniwand"
         if (!wandData.hasKey(mod))
             mod = Omniwand.MOD_ID;
 
-
         if (!removeStack) {
-            //Retrieving and resetting display name from cached display name
+            // Retrieving and resetting display name from cached display name
             String displayName = getDisplayNameCache(stack);
             stack.setStackDisplayName(displayName);
 
-            //Cleaning Omniwand data off the transforming stack
+            // Cleaning Omniwand data off the transforming stack
             cleanStackTags(stack);
 
-            //Adding the current item back into the wand data tag
+            // Adding the current item back into the wand data tag
             NBTTagCompound currentStackTag = new NBTTagCompound();
             stack.writeToNBT(currentStackTag);
             wandData.setTag(wandSlot, currentStackTag);
         }
 
-        //Creating or pulling new item from the wand
+        // Creating or pulling new item from the wand
         ItemStack newStack;
         if (wandData.hasKey(mod) && !mod.equals(Omniwand.MOD_ID)) {
-            newStack = new ItemStack(wandData.getCompoundTag(mod));
+            newStack = ItemStack.loadItemStackFromNBT(wandData.getCompoundTag(mod));
             wandData.removeTag(mod);
         } else {
             newStack = new ItemStack(Registry.OMNIWAND);
             wandData.removeTag(Omniwand.MOD_ID);
         }
 
-        //Setting all the Omniwand required tag info
+        // Setting all the Omniwand required tag info
         setWandData(newStack, wandData);
         setModSlot(newStack, mod);
         setAutoMode(newStack, newStack.getItem() == Registry.OMNIWAND);
         setIsTransforming(newStack, newStack.getItem() != Registry.OMNIWAND);
 
-        //Setting new display name for stack
+        // Setting new display name for stack
         if (newStack.getItem() != Registry.OMNIWAND) {
             setDisplayNameCache(newStack, newStack.getDisplayName());
-            String displayName = TextFormatting.RESET + new TextComponentTranslation("omniwand:sudo_name", TextFormatting.GREEN + newStack.getDisplayName() + TextFormatting.RESET).getFormattedText();
+            String displayName = EnumChatFormatting.RESET + new ChatComponentTranslation(
+                "omniwand:sudo_name",
+                EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET).getFormattedText();
             newStack.setStackDisplayName(displayName);
         }
 
@@ -113,10 +124,9 @@ public class WandHelper {
      * @return The reverted Omniwand item with the passed ItemStack removed.
      */
     public static ItemStack removeItemFromWand(ItemStack stack, boolean isBroken, Consumer<ItemStack> consumer) {
-        if (stack.isEmpty() || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND)
-            return stack;
+        if (ItemHelper.isEmpty(stack) || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND) return stack;
 
-        //Getting removed stack
+        // Getting removed stack
         ItemStack original = stack.copy();
         ItemStack wandStack = getTransformedStack(stack, Omniwand.MOD_ID, true);
 
@@ -137,8 +147,7 @@ public class WandHelper {
      * Does nothing if the item is the Omniwand.
      */
     public static void cleanStackTags(ItemStack stack) {
-        if (stack.getItem() == Registry.OMNIWAND)
-            return;
+        if (stack.getItem() == Registry.OMNIWAND) return;
 
         NBTTagCompound tag = getStackTag(stack);
         tag.removeTag(TAG_WAND_DATA);
@@ -146,11 +155,13 @@ public class WandHelper {
         tag.removeTag(TAG_DISPLAY_NAME_CACHE);
         tag.removeTag(TAG_IS_TRANSFORMING);
         tag.removeTag(TAG_AUTO_TRANSFORM);
-        String defaultName = stack.getItem().getItemStackDisplayName(stack);
-        if (stack.getDisplayName().equals(defaultName)) {
+        String defaultName = stack.getItem()
+            .getItemStackDisplayName(stack);
+        if (stack.getDisplayName()
+            .equals(defaultName)) {
             tag.removeTag("display");
         }
-        if (tag.isEmpty()) {
+        if (ItemHelper.isEmpty(tag)) {
             stack.setTagCompound(null);
         } else {
             stack.setTagCompound(tag);
@@ -183,7 +194,6 @@ public class WandHelper {
         getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, autoMode && ConfigHandler.autoTransform);
     }
 
-
     public static boolean getIsTransforming(ItemStack stack) {
         return stack.hasTagCompound() && getStackTag(stack).hasKey(TAG_IS_TRANSFORMING);
     }
@@ -211,8 +221,7 @@ public class WandHelper {
     }
 
     public static NBTTagCompound getStackTag(ItemStack stack) {
-        if (!stack.hasTagCompound())
-            stack.setTagCompound(new NBTTagCompound());
+        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
         return stack.getTagCompound();
     }
 }
