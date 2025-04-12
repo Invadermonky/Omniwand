@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class AttachmentRecipe implements IRecipe {
-
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
         boolean foundWand = false;

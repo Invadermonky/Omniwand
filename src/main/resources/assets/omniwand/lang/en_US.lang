@@ -6,9 +6,10 @@ item.omniwand:wand.name=Omniwand
 # Tooltips
 tooltip.omniwand:wand.ctrl=Hold §bCTRL§7 for usage
 tooltip.omniwand:wand.shift=Hold §bSHIFT§7 for details
-tooltip.omniwand:wand.ctrl.1=Drop transformed item to revert wand
-tooltip.omniwand:wand.ctrl.2=Sneak+Drop transformed item to remove 
-tooltip.omniwand:wand.ctrl.3=item from wand
+tooltip.omniwand:wand.ctrl.1=Craft together to add item to wand
+tooltip.omniwand:wand.ctrl.2=Drop transformed item to revert wand
+tooltip.omniwand:wand.ctrl.3=Sneak + Drop transformed item to 
+tooltip.omniwand:wand.ctrl.4=remove from wand
 
 # Other
 omniwand:sudo_name=Omniwand (%s)

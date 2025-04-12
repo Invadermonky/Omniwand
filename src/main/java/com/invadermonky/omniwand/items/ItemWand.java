@@ -71,6 +71,7 @@ public class ItemWand extends Item {
             tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.1"));
             tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.2"));
             tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.3"));
+            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.4"));
         } else {
             tooltip.add(I18n.format("tooltip.omniwand:wand.shift"));
             tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl"));
