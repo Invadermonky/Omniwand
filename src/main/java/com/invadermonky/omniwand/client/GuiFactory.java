@@ -1,22 +1,21 @@
 package com.invadermonky.omniwand.client;
 
-import java.util.Set;
-
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.config.ConfigHandler;
+import cpw.mods.fml.client.IModGuiFactory;
+import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
-
-import cpw.mods.fml.client.IModGuiFactory;
-import cpw.mods.fml.client.config.GuiConfig;
+import java.util.Set;
 
 public class GuiFactory implements IModGuiFactory {
 
     @Override
-    public void initialize(Minecraft minecraftInstance) {}
+    public void initialize(Minecraft minecraftInstance) {
+    }
 
     @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {

@@ -4,7 +4,11 @@
 item.omniwand:wand.name=Omniwand
 
 # Tooltips
-tooltip.omniwand:shiftinfo=Hold §bSHIFT§7 for details
+tooltip.omniwand:wand.ctrl=Hold §bCTRL§7 for usage
+tooltip.omniwand:wand.shift=Hold §bSHIFT§7 for details
+tooltip.omniwand:wand.ctrl.1=Drop transformed item to revert wand
+tooltip.omniwand:wand.ctrl.2=Sneak+Drop transformed item to remove 
+tooltip.omniwand:wand.ctrl.3=item from wand
 
 # Other
 omniwand:sudo_name=Omniwand (%s)

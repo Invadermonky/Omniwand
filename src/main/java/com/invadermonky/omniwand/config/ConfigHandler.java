@@ -1,16 +1,14 @@
 package com.invadermonky.omniwand.config;
 
-import java.io.File;
-import java.nio.file.Paths;
-
-import net.minecraftforge.common.config.Configuration;
-
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.util.libs.LibConfigs;
-
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class ConfigHandler {
     public static boolean autoTransform = true;
@@ -42,7 +40,7 @@ public class ConfigHandler {
         modAliases = config.getStringList(LibConfigs.modAliasesName, Configuration.CATEGORY_GENERAL, LibConfigs.modAliasesDefault, LibConfigs.modAliasesComment);
         transformItems = config.getStringList(LibConfigs.transformItemsName, Configuration.CATEGORY_GENERAL, LibConfigs.transformItemsDefault, LibConfigs.transformItemsComment);
 
-        if(config.hasChanged())
+        if (config.hasChanged())
             config.save();
     }
 

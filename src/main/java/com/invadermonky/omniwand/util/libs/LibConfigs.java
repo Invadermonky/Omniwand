@@ -19,14 +19,29 @@ public class LibConfigs {
             "List of mod aliases used for Omniwand transforming.",
             "  Format: modid=aliasmodid"
         """;
-    public static String[] modAliasesDefault = new String[] { "ae2stuff=appliedenergistics2", "animus=bloodmagic",
-        "bloodarsenal=bloodmagic", "buildcrafttransport=buildcraft", "buildcraftfactory=buildcraft",
-        "buildcraftsilicon=buildcraft", "deepresonance=rftools", "immersivetech=immersiveengineering",
-        "immersivepetrolium=immersiveengineering", "industrialforegoing=teslacorelib",
-        "integrateddynamics=integratedtunnels", "mekanismgenerators=mekanism", "mekanismtools=mekanism",
-        "nautralpledge=botania", "redstonearsenal=thermalfoundation", "rftoolsdim=rftools", "rftoolspower=rftools",
-        "rftoolscontrol=rftools", "thermalcultivation=thermalfoundation", "thermaldynamics=thermalfoundation",
-        "thermalexpansion=thermalfoundation", "threng=appliedenergistics2", "xnet=rftools" };
+    public static String[] modAliasesDefault = new String[]{
+        "ae2stuff=appliedenergistics2",
+        "animus=bloodmagic",
+        "bloodarsenal=bloodmagic",
+        "buildcrafttransport=buildcraft",
+        "buildcraftfactory=buildcraft",
+        "buildcraftsilicon=buildcraft",
+        "deepresonance=rftools",
+        "immersivetech=immersiveengineering",
+        "immersivepetrolium=immersiveengineering",
+        "industrialforegoing=teslacorelib",
+        "integrateddynamics=integratedtunnels",
+        "mekanismgenerators=mekanism",
+        "mekanismtools=mekanism",
+        "redstonearsenal=thermalfoundation",
+        "rftoolsdim=rftools",
+        "rftoolspower=rftools",
+        "rftoolscontrol=rftools",
+        "thermalcultivation=thermalfoundation",
+        "thermaldynamics=thermalfoundation",
+        "thermalexpansion=thermalfoundation",
+        "threng=appliedenergistics2",
+        "xnet=rftools"};
 
     public static String transformItemsName = "Transform Items";
     public static String transformItemsComment = """
@@ -35,12 +50,22 @@ public class LibConfigs {
                 This option will override all blacklist settings.
                   Format: modid:item_id
         """;
-    public static String[] transformItemsDefault = new String[] { "appliedenergistics2:certus_quartz_wrench",
-        "appliedenergistics2:nether_quartz_wrench", "appliedenergistics2:network_tool", "astralsorcery:itemwand",
-        "botania:twigwand", "draconicevolution:crystal_binder", "embers:tinker_hammer",
-        "environmentaltech:tool_multiblock_assembler", "immersiveengineering:tool:0", "enderio:item_yeta_wrench",
-        "mekanism:configurator", "naturesaura:range_visualizer", "rftools:smartwrench", "teslacorelib:wrench",
-        "thermalfoundation:wrench" };
+    public static String[] transformItemsDefault = new String[]{
+        "appliedenergistics2:certus_quartz_wrench",
+        "appliedenergistics2:nether_quartz_wrench",
+        "appliedenergistics2:network_tool",
+        "astralsorcery:itemwand",
+        "Botania:twigWand",
+        "draconicevolution:crystal_binder",
+        "embers:tinker_hammer",
+        "environmentaltech:tool_multiblock_assembler",
+        "immersiveengineering:tool:0",
+        "enderio:item_yeta_wrench",
+        "mekanism:configurator",
+        "naturesaura:range_visualizer",
+        "rftools:smartWrenchItem",
+        "teslacorelib:wrench",
+        "thermalfoundation:wrench"};
 
     public static String attachBlacklistName = "Item Blacklist";
     public static String attachBlacklistComment = """
@@ -66,8 +91,11 @@ public class LibConfigs {
         "    7. Whitelisted Names",
         ""
         """;
-    public static String[] attachBlacklistDefault = new String[] { "mod=intangible", "mod=immersiveengineering",
-        "mod=tconstruct" };
+    public static String[] attachBlacklistDefault = new String[]{
+        "mod=intangible",
+        "mod=immersiveengineering",
+        "mod=tconstruct"
+    };
 
     public static String attachWhitelistName = "Item Whitelist";
     public static String attachWhitelistComment = """
@@ -93,6 +121,14 @@ public class LibConfigs {
         "    7. Whitelisted Names",
         ""
         """;
-    public static String[] attachWhitelistDefault = new String[] { "name=configurator", "name=crowbar", "name=hammer",
-        "name=rod", "name=rotator", "name=screwdriver", "name=wand", "name=wrench" };
+    public static String[] attachWhitelistDefault = new String[]{
+        "name=configurator",
+        "name=crowbar",
+        "name=hammer",
+        "name=rod",
+        "name=rotator",
+        "name=screwdriver",
+        "name=wand",
+        "name=wrench"
+    };
 }

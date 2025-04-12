@@ -1,14 +1,12 @@
 package com.invadermonky.omniwand.proxy;
 
+import com.invadermonky.omniwand.client.GuiWand;
+import com.invadermonky.omniwand.handlers.ClientEventHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-
-import com.invadermonky.omniwand.client.GuiWand;
-import com.invadermonky.omniwand.handlers.ClientEventHandler;
-
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
 

@@ -1,22 +1,20 @@
 package com.invadermonky.omniwand.handlers;
 
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.network.MessageWandTransform;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.MouseEvent;
-
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigTags;
-import com.invadermonky.omniwand.network.MessageWandTransform;
-import com.invadermonky.omniwand.util.ItemHelper;
-import com.invadermonky.omniwand.util.WandHelper;
-
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
@@ -46,18 +44,4 @@ public class ClientEventHandler {
             }
         }
     }
-
-    /*
-     * TODO: Figure this out
-     * @SubscribeEvent
-     * public void onPlayerSwing(PlayerInteractEvent.LeftClickEmpty event) {
-     * ItemStack stack = event.getItemStack();
-     * if (!ConfigHandler.crouchRevert || event.getEntityPlayer().isSneaking()) {
-     * if (WandHelper.isOmniwand(stack) && stack.getItem() != Registry.OMNIWAND) {
-     * ItemStack newStack = WandHelper.getTransformedStack(stack, Omniwand.MOD_ID, false);
-     * Omniwand.network.sendToServer(new MessageWandTransform(newStack, event.getEntityPlayer().inventory.currentItem));
-     * }
-     * }
-     * }
-     */
 }

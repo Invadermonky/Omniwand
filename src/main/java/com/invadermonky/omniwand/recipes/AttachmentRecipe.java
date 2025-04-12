@@ -1,16 +1,15 @@
 package com.invadermonky.omniwand.recipes;
 
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class AttachmentRecipe implements IRecipe {
 

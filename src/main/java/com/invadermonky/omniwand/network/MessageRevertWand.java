@@ -1,27 +1,28 @@
 package com.invadermonky.omniwand.network;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
-
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 public class MessageRevertWand implements IMessage {
 
-    public MessageRevertWand() {}
+    public MessageRevertWand() {
+    }
 
     @Override
-    public void fromBytes(ByteBuf buf) {}
+    public void fromBytes(ByteBuf buf) {
+    }
 
     @Override
-    public void toBytes(ByteBuf buf) {}
+    public void toBytes(ByteBuf buf) {
+    }
 
     public static class MsgHandler implements IMessageHandler<MessageRevertWand, IMessage> {
 

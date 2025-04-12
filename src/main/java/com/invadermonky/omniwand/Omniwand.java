@@ -1,18 +1,16 @@
 package com.invadermonky.omniwand;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.proxy.CommonProxy;
 import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.LogHelper;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
     modid = Omniwand.MOD_ID,

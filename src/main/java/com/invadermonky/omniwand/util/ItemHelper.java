@@ -1,10 +1,9 @@
 package com.invadermonky.omniwand.util;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemHelper {
 
@@ -27,26 +26,26 @@ public class ItemHelper {
 
     public static String getOwnerMod(ItemStack stack) {
         GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-        return id != null ? id.modId.toLowerCase() : "";
+        return id != null ? id.modId : "";
     }
 
     public static String getOwnerMod(Block block) {
         GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(block);
-        return id != null ? id.modId.toLowerCase() : "";
+        return id != null ? id.modId : "";
     }
 
     public static String getItemId(ItemStack stack) {
         GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-        return id != null ? id.name.toLowerCase() : "";
+        return id != null ? id.name : "";
     }
 
     public static String getItemId(Block block) {
         GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(block);
-        return id != null ? id.name.toLowerCase() : "";
+        return id != null ? id.name : "";
     }
 
     public static String getRegistryName(ItemStack stack) {
         GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-        return id != null ? id.toString().toLowerCase() : "";
+        return id != null ? id.toString() : "";
     }
 }

@@ -1,12 +1,10 @@
 package com.invadermonky.omniwand.registry;
 
-import net.minecraft.item.Item;
-
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.items.ItemWand;
 import com.invadermonky.omniwand.recipes.AttachmentRecipe;
-
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.Item;
 
 public class Registry {
 

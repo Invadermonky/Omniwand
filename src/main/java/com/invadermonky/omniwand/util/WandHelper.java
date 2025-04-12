@@ -1,9 +1,10 @@
 package com.invadermonky.omniwand.util;
 
-import static com.invadermonky.omniwand.util.libs.LibTags.*;
-
-import java.util.function.Consumer;
-
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.registry.Registry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -11,18 +12,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
-import com.invadermonky.omniwand.config.ConfigTags;
-import com.invadermonky.omniwand.registry.Registry;
+import java.util.function.Consumer;
 
-import cpw.mods.fml.common.Loader;
+import static com.invadermonky.omniwand.util.libs.LibTags.*;
 
 public class WandHelper {
 
     public static String getModName(String mod) {
         ModContainer modContainer = Loader.instance().getIndexedModList().get(mod);
-        if(modContainer != null) {
+        if (modContainer != null) {
             String name = modContainer.getName();
             return !name.isEmpty() ? name : modContainer.getModId();
         }

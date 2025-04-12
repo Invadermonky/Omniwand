@@ -1,9 +1,8 @@
 package com.invadermonky.omniwand.util;
 
+import com.invadermonky.omniwand.Omniwand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.invadermonky.omniwand.Omniwand;
 
 public class LogHelper {
 

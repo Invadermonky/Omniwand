@@ -1,9 +1,12 @@
 package com.invadermonky.omniwand.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.config.ConfigTags;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,20 +17,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
-import com.invadermonky.omniwand.config.ConfigTags;
-import com.invadermonky.omniwand.util.ItemHelper;
-import com.invadermonky.omniwand.util.WandHelper;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ItemWand extends Item {
-
     public ItemWand() {
-        this.setUnlocalizedName("item.omniwand:wand.name");
-        this.setTextureName("omniwand:items/wand");
+        this.setUnlocalizedName("omniwand:wand");
+        this.setTextureName("omniwand:wand");
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
     }
@@ -55,10 +52,7 @@ public class ItemWand extends Item {
                     String mod = WandHelper.getModOrAlias(storedItem);
                     if (ConfigHandler.restrictTooltip) {
                         if (mod.equals(key) && ConfigTags.isTransformItem(storedItem)) {
-                            name = EnumChatFormatting.GREEN + WandHelper.getModName(mod)
-                                + EnumChatFormatting.AQUA
-                                + " ┠> "
-                                + name;
+                            name = EnumChatFormatting.GREEN + WandHelper.getModName(mod) + EnumChatFormatting.AQUA + " ┠> " + name;
                             tooltip.add(name);
                         }
                     } else {
@@ -73,8 +67,13 @@ public class ItemWand extends Item {
                     }
                 }
             }
+        } else if (GuiScreen.isCtrlKeyDown()) {
+            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.1"));
+            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.2"));
+            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.3"));
         } else {
-            tooltip.add(I18n.format("tooltip.omniwand:shiftinfo"));
+            tooltip.add(I18n.format("tooltip.omniwand:wand.shift"));
+            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl"));
         }
     }
 }

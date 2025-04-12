@@ -1,7 +1,11 @@
 package com.invadermonky.omniwand.client;
 
-import java.util.*;
-
+import com.invadermonky.omniwand.Omniwand;
+import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.util.ItemHelper;
+import com.invadermonky.omniwand.util.WandHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,17 +15,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.network.MessageGuiTransform;
-import com.invadermonky.omniwand.util.ItemHelper;
-import com.invadermonky.omniwand.util.WandHelper;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.*;
 
 public class GuiWand extends GuiScreen {
 
@@ -36,8 +33,10 @@ public class GuiWand extends GuiScreen {
         int color1 = 1347420415;
         int color2 = -267386864;
 
-        boolean lighting = GL11.glGetBoolean(2896);
-        if (lighting) RenderHelper.disableStandardItemLighting();
+        boolean lighting = GL11.glGetBoolean(GL11.GL_LIGHTING);
+        if (lighting) {
+            RenderHelper.disableStandardItemLighting();
+        }
 
         if (!tooltipData.isEmpty()) {
             int var1 = 0;
@@ -103,7 +102,9 @@ public class GuiWand extends GuiScreen {
             GL11.glEnable(GL11.GL_DEPTH_TEST);
         }
 
-        if (!lighting) RenderHelper.disableStandardItemLighting();
+        if (!lighting) {
+            RenderHelper.disableStandardItemLighting();
+        }
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         // GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -120,9 +121,9 @@ public class GuiWand extends GuiScreen {
         float blue_2 = (float) (par6 >> 8 & 255) / 255.0F;
         float alpha_2 = (float) (par6 & 255) / 255.0F;
 
-        GL11.glDisable(GL11.GL_TEXTURE);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         // GlStateManager.disableTexture2D();
@@ -150,9 +151,9 @@ public class GuiWand extends GuiScreen {
 
         tessellator.draw();
         GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glEnable(GL11.GL_ALPHA);
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_TEXTURE);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
         // GlStateManager.shadeModel(7424);
         // GlStateManager.disableBlend();
         // GlStateManager.enableAlpha();
@@ -229,7 +230,7 @@ public class GuiWand extends GuiScreen {
         if (!ItemHelper.isEmpty(tooltipStack)) {
             String name = WandHelper.getDisplayNameCache(tooltipStack);
             String mod = EnumChatFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
-            //renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
+            renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
                 Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));

@@ -1,15 +1,13 @@
 package com.invadermonky.omniwand.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.minecraft.item.ItemStack;
-
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.LogHelper;
-
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
+import net.minecraft.item.ItemStack;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfigTags {
 
@@ -64,14 +62,14 @@ public class ConfigTags {
         if (WHITELIST.get(ITEM)
             .contains(itemId)
             || WHITELIST.get(ITEM)
-                .contains(metaId)) {
+            .contains(metaId)) {
             return true;
         }
         // If Blacklisted Item
         if (BLACKLIST.get(ITEM)
             .contains(itemId)
             || BLACKLIST.get(ITEM)
-                .contains(itemId)) {
+            .contains(itemId)) {
             return false;
         }
         // If Blacklisted Mod
