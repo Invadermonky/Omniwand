@@ -21,7 +21,7 @@ public class ConfigTags {
     private static final String NAME = "name";
 
     public static boolean shouldTransform(boolean isSneaking) {
-        return isSneaking == ConfigHandler.sneakTransform;
+        return isSneaking == ConfigHandler.sneakLocking;
     }
 
     /**

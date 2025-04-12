@@ -1,9 +1,9 @@
 [
 {
-  "modid": "omniwand",
-  "name": "Omniwand",
+  "modid": ${modId},
+  "name": ${modName},
   "description": "The wand to end all wands.",
-  "version": "1.0.0",
+  "version": ${modVersion},
   "mcversion": "1.7.10",
   "url": "https://www.curseforge.com/minecraft/mc-mods/omniwand",
   "updateUrl": "",

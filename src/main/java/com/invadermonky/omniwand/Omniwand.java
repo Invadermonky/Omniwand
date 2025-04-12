@@ -20,14 +20,14 @@ import net.minecraftforge.common.MinecraftForge;
     guiFactory = Omniwand.GUI_FACTORY)
 public class Omniwand {
 
-    public static final String MOD_ID = "omniwand";
-    public static final String MOD_NAME = "Omniwand";
-    public static final String MOD_VERSION = "1.0.0";
+    public static final String MOD_ID = Tags.MOD_ID;
+    public static final String MOD_NAME = Tags.MOD_NAME;
+    public static final String MOD_VERSION = Tags.VERSION;
     public static final String MC_VERSION = "[1.7.10]";
-    public static final String GUI_FACTORY = "com.invadermonky.omniwand.client.GuiFactory";
+    public static final String GUI_FACTORY = "com.invadermonky." + MOD_ID + ".client.GuiFactory";
 
-    public static final String ProxyClientClass = "com.invadermonky.omniwand.proxy.ClientProxy";
-    public static final String ProxyServerClass = "com.invadermonky.omniwand.proxy.CommonProxy";
+    public static final String ProxyClientClass = "com.invadermonky." + MOD_ID + ".proxy.ClientProxy";
+    public static final String ProxyServerClass = "com.invadermonky." + MOD_ID + ".proxy.CommonProxy";
 
     public static SimpleNetworkWrapper network;
 

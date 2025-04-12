@@ -12,9 +12,8 @@ import java.nio.file.Paths;
 
 public class ConfigHandler {
     public static boolean autoTransform = true;
-    public static boolean sneakTransform = false;
+    public static boolean sneakLocking = false;
     public static boolean restrictTooltip = true;
-    public static boolean crouchRevert = false;
     public static String[] modAliases;
     public static String[] transformItems;
     public static String[] attachBlacklist;
@@ -31,9 +30,8 @@ public class ConfigHandler {
 
     public static void syncConfig() {
         autoTransform = config.getBoolean(LibConfigs.autoTransformName, Configuration.CATEGORY_GENERAL, true, LibConfigs.autoTransformComment);
-        crouchRevert = config.getBoolean(LibConfigs.crouchRevertName, Configuration.CATEGORY_GENERAL, false, LibConfigs.crouchRevertComment);
         restrictTooltip = config.getBoolean(LibConfigs.restrictTooltipName, Configuration.CATEGORY_GENERAL, true, LibConfigs.restrictTooltipComment);
-        sneakTransform = config.getBoolean(LibConfigs.sneakTransformName, Configuration.CATEGORY_GENERAL, false, LibConfigs.sneakTransformComment);
+        sneakLocking = config.getBoolean(LibConfigs.sneakLockingName, Configuration.CATEGORY_GENERAL, false, LibConfigs.sneakLockingComment);
 
         attachBlacklist = config.getStringList(LibConfigs.attachBlacklistName, Configuration.CATEGORY_GENERAL, LibConfigs.attachBlacklistDefault, LibConfigs.attachBlacklistComment);
         attachWhitelist = config.getStringList(LibConfigs.attachWhitelistName, Configuration.CATEGORY_GENERAL, LibConfigs.attachWhitelistDefault, LibConfigs.attachWhitelistComment);

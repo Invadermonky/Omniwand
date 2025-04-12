@@ -5,14 +5,11 @@ public class LibConfigs {
     public static String autoTransformName = "Auto Transform";
     public static String autoTransformComment = "Enables Omniwand auto-transform when looking at blocks.";
 
-    public static String sneakTransformName = "Offhand Transform";
-    public static String sneakTransformComment = "Omniwand will only transform when sneaking.";
+    public static String sneakLockingName = "Sneak Locking";
+    public static String sneakLockingComment = "Omniwand will not transform when sneaking. Set to true to invert this behavior.";
 
     public static String restrictTooltipName = "Restrict Tooltip";
     public static String restrictTooltipComment = "Restricts the Omniwand tooltip to only show items that used for auto-transforms.";
-
-    public static String crouchRevertName = "Revert Requires Crouch";
-    public static String crouchRevertComment = "Omniwand requires crouch + swing to revert from a transformed item.";
 
     public static String modAliasesName = "Mod Aliases";
     public static String modAliasesComment = """

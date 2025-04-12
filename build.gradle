@@ -1,0 +1,26 @@
+
+plugins {
+    id("com.gtnewhorizons.gtnhconvention")
+}
+
+// The planned name of the next release
+def NEXT_VERSION = properties.minecraftVersion + "-" + properties.modVersion
+version = NEXT_VERSION
+
+// Append to the version as needed. If the variables look a bit strange, that's because they are -
+// git-version doesn't expose a ton of useful functions, we need to extract them indirectly.
+
+// If we have a clean tag (or manually specified), this is a production release.
+// No need for the commit hash!
+def details = versionDetails()
+def isPlainTag = details.getCommitDistance() == 0
+def noCommitHash = providers.gradleProperty("noCommitHash").isPresent()
+if (!isPlainTag && !noCommitHash) {
+    version += "-" + details.gitHash
+}
+
+// If we have uncommitted changes, say so.
+def isDirty = gitVersion().endsWith(".dirty")
+if (isDirty && !noCommitHash) {
+    version += "-dirty"
+}
