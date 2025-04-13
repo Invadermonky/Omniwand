@@ -1,0 +1,121 @@
+{
+  "item": [
+    {
+      "Omniwand Id": 7987
+    }
+  ] ,
+  "general": [
+    {
+      "__comment": [
+        "Enables Omniwand auto-transform when looking at blocks."
+      ] ,
+      "Auto Transform": true
+    } ,
+    {
+      "__comment": [
+        "Omniwand will not transform when sneaking. Set to true to invert this behavior."
+      ] ,
+      "Sneak Locking": true
+    } ,
+    {
+      "__comment": [
+        "Restricts the Omniwand tooltip to only show items that used for auto-transforms."
+      ] ,
+      "Restrict Tooltip": false
+    } ,
+    {
+      "__comment": [
+        "List of mod aliases used for Omniwand transforming." ,
+        "  Format: modid=aliasmodid"
+      ] ,
+      "Mod Aliases": [
+        "AppEng.Blocks=AppEng.Tools",
+        "BuildCraft|Builders=BuildCraft|Core" ,
+        "BuildCraft|Factory=BuildCraft|Core" ,
+        "BuildCraft|Robotics=BuildCraft|Core" ,
+        "BuildCraft|Silicon=BuildCraft|Core" ,
+        "BuildCraft|Transport=BuildCraft|Core" ,
+        "RedstoneArsenal=ThermalExpansion"
+      ]
+    } ,
+    {
+      "__comment": [
+        "List of items that will be associated with Omniwand auto-transform. This must be set before items" ,
+        "are crafted into the wand. Only one transform item per mod can be stored in the Omniwand." ,
+        "This option will override all blacklist settings. You can set this either using the item unlocalized" ,
+        "name or the numerical item id as a string."
+      ] ,
+      "Transform Items": [
+        "19815" ,
+        "item.mfr.hammer" ,
+        "20256" ,
+        "item.wrenchItem" ,
+        "item.enderio.itemYetaWrench" ,
+        "4370"
+      ]
+    } ,
+    {
+      "__comment": [
+        "List of mods, items and names that will be whitelisted and blocked from being attached to the Omniwand." ,
+        "  Format:" ,
+        "    mod=modid - all items from this mod will be whitelisted" ,
+        "    item=unlocalizedName",
+        "    item=numericalId" ,
+        "    name=wrench - any item with the word 'wrench' in its item id will be whitelisted" ,
+        "" ,
+        "  Examples:" ,
+        "    mod=tconstruct" ,
+        "    item.mfr.hammer" ,
+        "    item=12243" ,
+        "    name=wrench" ,
+        "" ,
+        "  Filter Priority:" ,
+        "    1. Transform Items (will always attach)" ,
+        "    2. Whitelisted Items" ,
+        "    3. Blacklisted Items" ,
+        "    4. Blacklisted Mods" ,
+        "    5. Whitelisted Mods" ,
+        "    6. Blacklisted Names" ,
+        "    7. Whitelisted Names"
+      ] ,
+      "Item Whitelist": [
+        "name=configurator" ,
+        "name=crowbar" ,
+        "name=hammer" ,
+        "name=rod" ,
+        "name=rotator" ,
+        "name=screwdriver" ,
+        "name=wand" ,
+        "name=wrench"
+      ]
+    } ,
+    {
+      "__comment": [
+        "List of mods, items and names that will be blacklisted and blocked from being attached to the Omniwand." ,
+        "  Format:" ,
+        "    mod=modid - all items from this mod will be blacklisted" ,
+        "    item=unlocalizedName",
+        "    item=numericalId" ,
+        "    name=wrench - any item with the word 'wrench' in its item id will be blacklisted" ,
+        "" ,
+        "  Examples:" ,
+        "    mod=tconstruct" ,
+        "    item.mfr.hammer" ,
+        "    item=12243" ,
+        "    name=wrench" ,
+        "" ,
+        "  Filter Priority:" ,
+        "    1. Transform Items (will always attach)" ,
+        "    2. Whitelisted Items" ,
+        "    3. Blacklisted Items" ,
+        "    4. Blacklisted Mods" ,
+        "    5. Whitelisted Mods" ,
+        "    6. Blacklisted Names" ,
+        "    7. Whitelisted Names"
+      ] ,
+      "Item Blacklist": [
+        "mod=tconstruct"
+      ]
+    }
+  ]
+}

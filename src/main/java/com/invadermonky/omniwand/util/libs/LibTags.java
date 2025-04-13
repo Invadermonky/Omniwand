@@ -1,7 +1,6 @@
 package com.invadermonky.omniwand.util.libs;
 
 public class LibTags {
-
     public static final String TAG_AUTO_TRANSFORM = "omniwand:auto";
     public static final String TAG_DISPLAY_NAME_CACHE = "omniwand:display";
     public static final String TAG_IS_TRANSFORMING = "omniwand:transforming";

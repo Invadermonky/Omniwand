@@ -1,9 +1,9 @@
 package com.invadermonky.omniwand.client;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.network.MessageWandTransform;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -21,7 +22,8 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 
 public class GuiWand extends GuiScreen {
-    ItemStack wand;
+    protected RenderItem itemRenderer = new RenderItem();
+    protected ItemStack wand;
 
     public GuiWand(ItemStack wand) {
         this.wand = wand;
@@ -58,7 +60,7 @@ public class GuiWand extends GuiScreen {
             }
 
             Minecraft mc = Minecraft.getMinecraft();
-            ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            ScaledResolution res = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             int right = var2 + var1 + 5;
             int scaledWidth = res.getScaledWidth();
             int bottom;
@@ -106,7 +108,6 @@ public class GuiWand extends GuiScreen {
         }
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        // GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @SideOnly(Side.CLIENT)
@@ -125,11 +126,6 @@ public class GuiWand extends GuiScreen {
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glShadeModel(GL11.GL_SMOOTH);
-        // GlStateManager.disableTexture2D();
-        // GlStateManager.enableBlend();
-        // GlStateManager.disableAlpha();
-        // GlStateManager.blendFunc(770, 771);
-        // GlStateManager.shadeModel(7425);
 
         Tessellator tessellator = Tessellator.instance;
 
@@ -141,22 +137,11 @@ public class GuiWand extends GuiScreen {
         tessellator.addVertex(par1, par4, z);
         tessellator.addVertex(par3, par4, z);
 
-        // BufferBuilder buff = tessellator.getBuffer();
-        // buff.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        // buff.pos(par3, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
-        // buff.pos(par1, par2, z).color(green_1, blue_1, alpha_1, red_1).endVertex();
-        // buff.pos(par1, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
-        // buff.pos(par3, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
-
         tessellator.draw();
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        // GlStateManager.shadeModel(7424);
-        // GlStateManager.disableBlend();
-        // GlStateManager.enableAlpha();
-        // GlStateManager.enableTexture2D();
     }
 
     @Override
@@ -165,18 +150,18 @@ public class GuiWand extends GuiScreen {
         Map<String, ItemStack> stackMap = new HashMap<>();
 
         if (this.wand.hasTagCompound()) {
-            NBTTagCompound data = WandHelper.getWandData(this.wand);
-            ArrayList<String> keys = new ArrayList<>(data.func_150296_c());
+            NBTTagCompound wandData = WandHelper.getWandData(this.wand);
+            ArrayList<String> keys = new ArrayList<>(ItemHelper.getItemTagKeys(wandData));
             Collections.sort(keys);
 
             for (String key : keys) {
-                NBTTagCompound compoundTag = data.getCompoundTag(key);
+                NBTTagCompound compoundTag = wandData.getCompoundTag(key);
 
                 if (!ItemHelper.isEmpty(compoundTag)) stackMap.put(key, ItemStack.loadItemStackFromNBT(compoundTag));
             }
         }
 
-        ScaledResolution res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+        ScaledResolution res = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
         int centerX = res.getScaledWidth() / 2;
         int centerY = res.getScaledHeight() / 2;
         int amountPerRow = Math.min(12, Math.max(8, stackMap.size() / 3));
@@ -188,17 +173,17 @@ public class GuiWand extends GuiScreen {
         int extra = 2;
 
         drawRect(
-            startX - padding,
-            startY - padding,
-            startX + iconSize * amountPerRow + padding,
-            startY + iconSize * rows + padding,
-            570425344);
+                startX - padding,
+                startY - padding,
+                startX + iconSize * amountPerRow + padding,
+                startY + iconSize * rows + padding,
+                570425344);
         drawRect(
-            startX - padding - extra,
-            startY - padding - extra,
-            startX + iconSize * amountPerRow + padding + extra,
-            startY + iconSize * rows + padding + extra,
-            570425344);
+                startX - padding - extra,
+                startY - padding - extra,
+                startX + iconSize * amountPerRow + padding + extra,
+                startY + iconSize * rows + padding + extra,
+                570425344);
 
         ItemStack tooltipStack = null;
         String itemKey = "";
@@ -219,8 +204,10 @@ public class GuiWand extends GuiScreen {
                 ItemStack stack = stackMap.get(key);
                 if (!ItemHelper.isEmpty(stack)) {
                     FontRenderer font = stack.getItem().getFontRenderer(stack);
-                    if (font == null) font = this.fontRendererObj;
-                    itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
+                    if (font == null) font = this.fontRenderer;
+                    if (this.itemRenderer != null) {
+                        this.itemRenderer.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
+                    }
                 }
             }
             RenderHelper.disableStandardItemLighting();
@@ -232,7 +219,7 @@ public class GuiWand extends GuiScreen {
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
-                Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));
+                PacketDispatcher.sendPacketToServer(new MessageWandTransform(itemKey, false));
                 this.mc.displayGuiScreen(null);
             }
         }

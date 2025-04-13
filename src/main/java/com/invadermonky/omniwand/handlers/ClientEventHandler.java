@@ -1,24 +1,24 @@
 package com.invadermonky.omniwand.handlers;
 
-import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.network.MessageWandTransform;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.event.ForgeSubscribe;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @ForgeSubscribe
     public void onMouseEvent(MouseEvent event) {
         EntityPlayerSP playerSP = Minecraft.getMinecraft().thePlayer;
         ItemStack heldItem = playerSP.getHeldItem();
@@ -27,19 +27,21 @@ public class ClientEventHandler {
             ItemStack newStack = heldItem;
             MovingObjectPosition result = playerSP.rayTrace(playerSP.capabilities.isCreativeMode ? 5f : 4.5f, 1.0f);
 
-            if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                Block lookBlock = playerSP.worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
-                String lookMod = WandHelper.getModOrAlias(lookBlock);
+            String lookMod = "";
+            if (result != null && result.typeOfHit == EnumMovingObjectType.TILE) {
+                int blockId = playerSP.worldObj.getBlockId(result.blockX, result.blockY, result.blockZ);
+                Block lookBlock = Block.blocksList[blockId];
+                lookMod = WandHelper.getModOrAlias(lookBlock);
                 if (WandHelper.getAutoMode(newStack)) {
                     newStack = WandHelper.getTransformedStack(heldItem, lookMod, false);
                     WandHelper.setAutoMode(newStack, true);
                 }
             }
 
-            if (newStack != heldItem && !ItemHelper.areItemsEqual(newStack, heldItem)) {
+            if (!lookMod.isEmpty() && newStack != heldItem && !ItemHelper.areItemsEqual(newStack, heldItem)) {
                 int slot = playerSP.inventory.currentItem;
                 playerSP.inventory.setInventorySlotContents(slot, newStack);
-                Omniwand.network.sendToServer(new MessageWandTransform(newStack, slot));
+                PacketDispatcher.sendPacketToServer(new MessageWandTransform(lookMod, true));
             }
         }
     }

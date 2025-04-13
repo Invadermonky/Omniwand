@@ -4,8 +4,7 @@ import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.items.ItemWand;
 import com.invadermonky.omniwand.recipes.AttachmentRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -22,11 +21,11 @@ public class Registry {
     public static void registerRecipes() {
         GameRegistry.addRecipe(new AttachmentRecipe());
         CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(
-            new ItemStack(OMNIWAND),
-            " DE", " OD", "O  ",
-            'D', "gemDiamond",
-            'E', new ItemStack(Items.ender_pearl),
-            'O', new ItemStack(Blocks.obsidian)
+                new ItemStack(OMNIWAND),
+                " DE", " OD", "O  ",
+                'D', "gemDiamond",
+                'E', new ItemStack(Item.enderPearl),
+                'O', new ItemStack(Block.obsidian)
         ));
     }
 }

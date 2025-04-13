@@ -1,51 +1,54 @@
 package com.invadermonky.omniwand.network;
 
+import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.NetHandler;
+import net.minecraft.network.packet.Packet;
 
-public class MessageWandTransform implements IMessage {
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
-    public ItemStack stack;
-    public int slot;
+public class MessageWandTransform extends Packet {
+    public String modId;
+    public boolean auto;
 
-    public MessageWandTransform() {
-    }
-
-    public MessageWandTransform(ItemStack stack, int slot) {
-        this.stack = stack;
-        this.slot = slot;
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        stack = ByteBufUtils.readItemStack(buf);
-        slot = buf.readInt();
+    public MessageWandTransform(String modId, boolean auto) {
+        this.modId = modId;
+        this.auto = auto;
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeItemStack(buf, stack);
-        buf.writeInt(slot);
+    public void readPacketData(DataInput input) throws IOException {
+        this.modId = input.readUTF();
+        this.auto = input.readBoolean();
     }
 
-    public static class MsgHandler implements IMessageHandler<MessageWandTransform, IMessage> {
+    @Override
+    public void writePacketData(DataOutput output) throws IOException {
+        output.writeUTF(this.modId);
+        output.writeBoolean(this.auto);
+    }
 
-        @Override
-        public IMessage onMessage(MessageWandTransform message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().playerEntity;
-            ItemStack heldItem = player.getHeldItem();
+    @Override
+    public void processPacket(NetHandler handler) {
+        EntityPlayer player = handler.getPlayer();
+        ItemStack stack = player.getHeldItem();
+        boolean hasWand = !ItemHelper.isEmpty(stack) && stack.getItem() == Registry.OMNIWAND;
 
-            if (WandHelper.isOmniwand(heldItem) && message.stack != heldItem
-                && !ItemHelper.areItemsEqual(message.stack, heldItem))
-                player.inventory.setInventorySlotContents(player.inventory.currentItem, message.stack);
-            return null;
+        if (hasWand) {
+            ItemStack newStack = WandHelper.getTransformedStack(stack, this.modId, false);
+            WandHelper.setAutoMode(newStack, this.auto);
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, newStack);
         }
+    }
+
+    @Override
+    public int getPacketSize() {
+        return ByteBuffer.wrap(this.modId.getBytes()).getShort() + 2;
     }
 }

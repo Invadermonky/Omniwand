@@ -1,5 +1,9 @@
 #Localization files for Ominwand
 
+# Command
+command.omniwand.reload.success=Omniwand configuration reloaded! Config changes are now synced.
+command.omniwand.reload.usage=Use /omniwand_reload to reload omniwand configuration
+
 # Items
 item.omniwand:wand.name=Omniwand
 

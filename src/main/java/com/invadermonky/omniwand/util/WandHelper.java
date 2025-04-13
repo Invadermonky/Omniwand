@@ -7,12 +7,12 @@ import com.invadermonky.omniwand.registry.Registry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.util.function.Consumer;
+import net.minecraft.util.StatCollector;
+import org.jetbrains.annotations.Nullable;
 
 import static com.invadermonky.omniwand.util.libs.LibTags.*;
 
@@ -24,7 +24,7 @@ public class WandHelper {
             String name = modContainer.getName();
             return !name.isEmpty() ? name : modContainer.getModId();
         }
-        return "";
+        return mod;
     }
 
     public static String getModOrAlias(String modId) {
@@ -44,8 +44,7 @@ public class WandHelper {
     }
 
     public static boolean isTransformedWand(ItemStack stack) {
-        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack)
-            && !ItemHelper.isEmpty(getWandData(stack));
+        return !ItemHelper.isEmpty(getWandData(stack)) && stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack);
     }
 
     /**
@@ -68,13 +67,13 @@ public class WandHelper {
         NBTTagCompound wandData = (NBTTagCompound) getWandData(stack).copy();
 
         // If no transform item is found on wand, resets it to default "omniwand"
-        if (!wandData.hasKey(mod))
+        if (!wandData.hasKey(mod) || mod.equalsIgnoreCase("minecraft"))
             mod = Omniwand.MOD_ID;
 
         if (!removeStack) {
             // Retrieving and resetting display name from cached display name
             String displayName = getDisplayNameCache(stack);
-            stack.setStackDisplayName(displayName);
+            stack.setItemName(displayName);
 
             // Cleaning Omniwand data off the transforming stack
             cleanStackTags(stack);
@@ -104,10 +103,9 @@ public class WandHelper {
         // Setting new display name for stack
         if (newStack.getItem() != Registry.OMNIWAND) {
             setDisplayNameCache(newStack, newStack.getDisplayName());
-            String displayName = EnumChatFormatting.RESET + new ChatComponentTranslation(
-                "omniwand:sudo_name",
-                EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET).getFormattedText();
-            newStack.setStackDisplayName(displayName);
+            String displayName = EnumChatFormatting.RESET + StatCollector.translateToLocalFormatted("omniwand:sudo_name",
+                    EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET);
+            newStack.setItemName(displayName);
         }
 
         return newStack;
@@ -116,22 +114,22 @@ public class WandHelper {
     /**
      * Removes the current item from the Omniwand and returns the reverted Omniwand tool.
      *
-     * @param stack    The Omniwand stack
-     * @param isBroken Whether the item is broken or destroyed
-     * @param consumer If the item is not broken, the removed item will be added to this consumer
+     * @param stack      The Omniwand stack
+     * @param isBroken   Whether the item is broken or destroyed
+     * @param entityItem The entity item being droppped, can be null
      * @return The reverted Omniwand item with the passed ItemStack removed.
      */
-    public static ItemStack removeItemFromWand(ItemStack stack, boolean isBroken, Consumer<ItemStack> consumer) {
+    public static ItemStack removeItemFromWand(ItemStack stack, boolean isBroken, @Nullable EntityItem entityItem) {
         if (ItemHelper.isEmpty(stack) || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND) return stack;
 
         // Getting removed stack
         ItemStack original = stack.copy();
         ItemStack wandStack = getTransformedStack(stack, Omniwand.MOD_ID, true);
 
-        if (!isBroken) {
-            original.setStackDisplayName(getDisplayNameCache(original));
+        if (!isBroken && entityItem != null) {
+            original.setItemName(getDisplayNameCache(original));
             cleanStackTags(original);
-            consumer.accept(original);
+            entityItem.setEntityItemStack(original);
         }
 
         return wandStack;
@@ -154,9 +152,9 @@ public class WandHelper {
         tag.removeTag(TAG_IS_TRANSFORMING);
         tag.removeTag(TAG_AUTO_TRANSFORM);
         String defaultName = stack.getItem()
-            .getItemStackDisplayName(stack);
+                .getItemStackDisplayName(stack);
         if (stack.getDisplayName()
-            .equals(defaultName)) {
+                .equals(defaultName)) {
             tag.removeTag("display");
         }
         if (ItemHelper.isEmpty(tag)) {

@@ -1,27 +1,29 @@
 package com.invadermonky.omniwand.config;
 
+import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.LogHelper;
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
 import net.minecraft.item.ItemStack;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigTags {
 
-    private static final THashMap<String, String> MOD_ALIASES = new THashMap<>();
-    private static final THashSet<String> TRANSFORM_ITEMS = new THashSet<>(3);
-    private static final THashMap<String, THashSet<String>> BLACKLIST = new THashMap<>();
-    private static final THashMap<String, THashSet<String>> WHITELIST = new THashMap<>();
+    private static final HashMap<String, String> MOD_ALIASES = new HashMap<>();
+    private static final HashSet<String> TRANSFORM_ITEMS = new HashSet<>(3);
+    private static final HashMap<String, HashSet<String>> BLACKLIST = new HashMap<>();
+    private static final HashMap<String, HashSet<String>> WHITELIST = new HashMap<>();
 
     private static final String MOD = "mod";
     private static final String ITEM = "item";
     private static final String NAME = "name";
 
     public static boolean shouldTransform(boolean isSneaking) {
-        return isSneaking == ConfigHandler.sneakLocking;
+        return isSneaking != ConfigHandler.sneakLocking;
     }
 
     /**
@@ -31,14 +33,18 @@ public class ConfigTags {
      * @return Any registered alias for the passed mod id
      */
     public static String getModAlias(String modId) {
-        return MOD_ALIASES.getOrDefault(modId, modId);
+        if (MOD_ALIASES.containsKey(modId)) {
+            return MOD_ALIASES.get(modId);
+        }
+        return !modId.isEmpty() ? modId : Omniwand.MOD_ID;
     }
 
     public static boolean isTransformItem(ItemStack stack) {
         if (ItemHelper.isEmpty(stack)) return false;
 
-        String itemId = ItemHelper.getRegistryName(stack);
-        return TRANSFORM_ITEMS.contains(itemId) || TRANSFORM_ITEMS.contains(itemId + ":" + stack.getItemDamage());
+        String itemName = ItemHelper.getRegistryName(stack);
+        String itemId = ItemHelper.getItemId(stack);
+        return TRANSFORM_ITEMS.contains(itemName) || TRANSFORM_ITEMS.contains(itemId);
     }
 
     /**
@@ -50,47 +56,38 @@ public class ConfigTags {
     @SuppressWarnings("ConstantConditions")
     public static boolean canItemStackAttach(ItemStack stack) {
         String itemMod = ItemHelper.getOwnerMod(stack);
-        String itemName = ItemHelper.getItemId(stack);
-        String itemId = ItemHelper.getRegistryName(stack);
-        String metaId = itemId + ":" + stack.getItemDamage();
+        String itemName = ItemHelper.getRegistryName(stack);
+        String itemId = ItemHelper.getItemId(stack);
 
         // If Transform Item
-        if (TRANSFORM_ITEMS.contains(itemId) || TRANSFORM_ITEMS.contains(metaId)) {
+        if (TRANSFORM_ITEMS.contains(itemId) || TRANSFORM_ITEMS.contains(itemName)) {
             return true;
         }
         // If Whitelisted Item
-        if (WHITELIST.get(ITEM)
-            .contains(itemId)
-            || WHITELIST.get(ITEM)
-            .contains(metaId)) {
+        if (WHITELIST.get(ITEM).contains(itemId) || WHITELIST.containsKey(itemName)) {
             return true;
         }
         // If Blacklisted Item
-        if (BLACKLIST.get(ITEM)
-            .contains(itemId)
-            || BLACKLIST.get(ITEM)
-            .contains(itemId)) {
+        if (BLACKLIST.get(ITEM).contains(itemId) || BLACKLIST.get(ITEM).contains(itemName)) {
             return false;
         }
         // If Blacklisted Mod
-        if (BLACKLIST.get(MOD)
-            .contains(itemMod)) {
+        if (BLACKLIST.get(MOD).contains(itemMod)) {
             return false;
         }
         // If Whitelisted Mod
-        if (WHITELIST.get(MOD)
-            .contains(itemMod)) {
+        if (WHITELIST.get(MOD).contains(itemMod)) {
             return true;
         }
         // If Blacklisted Name
         for (String name : BLACKLIST.get(NAME)) {
-            if (itemName.contains(name)) {
+            if (itemName.toLowerCase().contains(name)) {
                 return false;
             }
         }
         // If Whitelisted Name
         for (String name : WHITELIST.get(NAME)) {
-            if (itemName.contains(name)) {
+            if (itemName.toLowerCase().contains(name)) {
                 return true;
             }
         }
@@ -112,45 +109,31 @@ public class ConfigTags {
 
     private static void syncTransformItems() {
         TRANSFORM_ITEMS.clear();
-        Pattern pattern = Pattern.compile("^([^:\\s]+:[^:\\s]+:?\\d*)$");
         for (String item : ConfigHandler.transformItems) {
-            item = item.replace(" ", "")
-                .trim();
-            Matcher matcher = pattern.matcher(item);
-            if (matcher.find()) {
-                TRANSFORM_ITEMS.add(item);
-            } else {
-                LogHelper.error("Invalid transform item string: " + item);
-            }
+            item = item.replace(" ", "").trim();
+            TRANSFORM_ITEMS.add(item);
         }
     }
 
-    private static void syncFilterList(THashMap<String, THashSet<String>> filterMap, String[] filterConfig) {
+    private static void syncFilterList(Map<String, HashSet<String>> filterMap, String[] filterConfig) {
         filterMap.clear();
-        filterMap.put(MOD, new THashSet<>());
-        filterMap.put(ITEM, new THashSet<>());
-        filterMap.put(NAME, new THashSet<>());
+        filterMap.put(MOD, new HashSet<String>());
+        filterMap.put(ITEM, new HashSet<String>());
+        filterMap.put(NAME, new HashSet<String>());
 
         Pattern pattern = Pattern.compile("^(mod|item|name)=(.+)$");
         for (String filter : filterConfig) {
             Matcher matcher = pattern.matcher(filter);
             if (matcher.find()) {
-                switch (matcher.group(1)
-                    .toLowerCase()) {
+                switch (matcher.group(1).toLowerCase()) {
                     case MOD:
-                        filterMap.putIfAbsent(MOD, new THashSet<>());
-                        filterMap.get(MOD)
-                            .add(matcher.group(2));
+                        filterMap.get(MOD).add(matcher.group(2).replace(" ", "").trim());
                         break;
                     case ITEM:
-                        filterMap.putIfAbsent(ITEM, new THashSet<>());
-                        filterMap.get(ITEM)
-                            .add(matcher.group(2));
+                        filterMap.get(ITEM).add(matcher.group(2).replace(" ", "").trim());
                         break;
                     case NAME:
-                        filterMap.putIfAbsent(NAME, new THashSet<>());
-                        filterMap.get(NAME)
-                            .add(matcher.group(2));
+                        filterMap.get(NAME).add(matcher.group(2).replace(" ", "").trim());
                         break;
                 }
             } else {

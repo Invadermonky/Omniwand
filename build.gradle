@@ -1,26 +1,51 @@
-
 plugins {
-    id("com.gtnewhorizons.gtnhconvention")
+    id 'java'
+    id 'java-library'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
+    id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
+    id 'com.modrinth.minotaur' version '2.+' apply false
+    id 'xyz.wagyourtail.unimined'  version '1.3.14'
 }
 
-// The planned name of the next release
-def NEXT_VERSION = properties.minecraftVersion + "-" + properties.modVersion
-version = NEXT_VERSION
+group 'com.invadermonky.omniwand'
+version '1.6.4-1.0.0'
 
-// Append to the version as needed. If the variables look a bit strange, that's because they are -
-// git-version doesn't expose a ton of useful functions, we need to extract them indirectly.
-
-// If we have a clean tag (or manually specified), this is a production release.
-// No need for the commit hash!
-def details = versionDetails()
-def isPlainTag = details.getCommitDistance() == 0
-def noCommitHash = providers.gradleProperty("noCommitHash").isPresent()
-if (!isPlainTag && !noCommitHash) {
-    version += "-" + details.gitHash
+base {
+    archivesName = 'omniwand'
 }
 
-// If we have uncommitted changes, say so.
-def isDirty = gitVersion().endsWith(".dirty")
-if (isDirty && !noCommitHash) {
-    version += "-dirty"
+// this is just here so we can test the outputs easier and clean between tests
+unimined.useGlobalCache = false
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+unimined.minecraft {
+    version "1.6.4"
+
+    minecraftForge {
+        loader "9.11.1.1345"
+    }
+
+    minecraftRemapper.config {
+        ignoreConflicts(true)
+    }
+}
+
+repositories {
+}
+
+dependencies {
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+
+    filesMatching("mcmod.info") {
+        expand "version": project.version
+    }
 }

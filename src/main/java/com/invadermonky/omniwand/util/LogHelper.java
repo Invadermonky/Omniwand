@@ -1,34 +1,22 @@
 package com.invadermonky.omniwand.util;
 
 import com.invadermonky.omniwand.Omniwand;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogHelper {
+    private static final Logger LOG = Logger.getLogger(Omniwand.MOD_ID);
 
-    private static final Logger LOG = LogManager.getLogger(Omniwand.MOD_ID);
-
-    public static void debug(Object obj) {
-        LOG.debug(obj);
+    public static void debug(String obj) {
+        LOG.log(Level.INFO, obj);
     }
 
-    public static void error(Object obj) {
-        LOG.error(obj);
+    public static void error(String obj) {
+        LOG.log(Level.WARNING, obj);
     }
 
-    public static void fatal(Object obj) {
-        LOG.fatal(obj);
-    }
-
-    public static void info(Object obj) {
+    public static void info(String obj) {
         LOG.info(obj);
-    }
-
-    public static void trace(Object obj) {
-        LOG.trace(obj);
-    }
-
-    public static void warn(Object obj) {
-        LOG.warn(obj);
     }
 }

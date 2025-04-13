@@ -5,8 +5,6 @@ import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,6 +21,7 @@ import java.util.List;
 
 public class ItemWand extends Item {
     public ItemWand() {
+        super(ConfigHandler.omniwandId);
         this.setUnlocalizedName("omniwand:wand");
         this.setTextureName("omniwand:wand");
         this.setCreativeTab(CreativeTabs.tabTools);
@@ -36,12 +35,11 @@ public class ItemWand extends Item {
         return stack;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack wandStack, EntityPlayer player, List<String> tooltip, boolean p_77624_4_) {
+    public void addInformation(ItemStack wandStack, EntityPlayer par2EntityPlayer, List tooltip, boolean par4) {
         NBTTagCompound wandData = WandHelper.getWandData(wandStack);
         if (!ItemHelper.isEmpty(wandData) && GuiScreen.isShiftKeyDown()) {
-            List<String> keys = new ArrayList<>(wandData.func_150296_c());
+            List<String> keys = new ArrayList<>(ItemHelper.getItemTagKeys(wandData));
             Collections.sort(keys);
             String currentMod = "";
 
@@ -68,13 +66,13 @@ public class ItemWand extends Item {
                 }
             }
         } else if (GuiScreen.isCtrlKeyDown()) {
-            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.1"));
-            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.2"));
-            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.3"));
-            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl.4"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl.1"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl.2"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl.3"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl.4"));
         } else {
-            tooltip.add(I18n.format("tooltip.omniwand:wand.shift"));
-            tooltip.add(I18n.format("tooltip.omniwand:wand.ctrl"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.shift"));
+            tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl"));
         }
     }
 }
