@@ -11,7 +11,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkModHandler;
 
 @Mod(
         modid = Omniwand.MOD_ID,
@@ -20,7 +19,6 @@ import cpw.mods.fml.common.network.NetworkModHandler;
         acceptedMinecraftVersions = Omniwand.MC_VERSION
 )
 public class Omniwand {
-
     public static final String MOD_ID = "omniwand";
     public static final String MOD_NAME = "Omniwand";
     public static final String MOD_VERSION = "1.0.0";
@@ -28,9 +26,6 @@ public class Omniwand {
 
     public static final String ProxyClientClass = "com.invadermonky." + MOD_ID + ".proxy.ClientProxy";
     public static final String ProxyServerClass = "com.invadermonky." + MOD_ID + ".proxy.CommonProxy";
-
-
-    public static NetworkModHandler network;
 
     @Mod.Instance(MOD_ID)
     public static Omniwand INSTANCE;

@@ -49,6 +49,6 @@ public class MessageWandTransform extends Packet {
 
     @Override
     public int getPacketSize() {
-        return ByteBuffer.wrap(this.modId.getBytes()).getShort() + 2;
+        return ByteBuffer.wrap(this.modId.getBytes()).getShort() + 1;
     }
 }

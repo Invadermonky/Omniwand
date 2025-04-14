@@ -59,12 +59,18 @@ public class ConfigTags {
         String itemName = ItemHelper.getRegistryName(stack);
         String itemId = ItemHelper.getItemId(stack);
 
+        if (ConfigHandler.enableDebug) {
+            LogHelper.debug("Item Mod: " + itemMod);
+            LogHelper.debug("Item Name: " + itemName);
+            LogHelper.debug("Item Id: " + itemId);
+        }
+
         // If Transform Item
         if (TRANSFORM_ITEMS.contains(itemId) || TRANSFORM_ITEMS.contains(itemName)) {
             return true;
         }
         // If Whitelisted Item
-        if (WHITELIST.get(ITEM).contains(itemId) || WHITELIST.containsKey(itemName)) {
+        if (WHITELIST.get(ITEM).contains(itemId) || WHITELIST.get(ITEM).contains(itemName)) {
             return true;
         }
         // If Blacklisted Item
@@ -127,10 +133,10 @@ public class ConfigTags {
             if (matcher.find()) {
                 switch (matcher.group(1).toLowerCase()) {
                     case MOD:
-                        filterMap.get(MOD).add(matcher.group(2).replace(" ", "").trim());
+                        filterMap.get(MOD).add(matcher.group(2));
                         break;
                     case ITEM:
-                        filterMap.get(ITEM).add(matcher.group(2).replace(" ", "").trim());
+                        filterMap.get(ITEM).add(matcher.group(2));
                         break;
                     case NAME:
                         filterMap.get(NAME).add(matcher.group(2).replace(" ", "").trim());

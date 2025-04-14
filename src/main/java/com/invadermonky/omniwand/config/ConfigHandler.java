@@ -9,6 +9,7 @@ import cpw.mods.fml.common.Loader;
 import net.minecraftforge.common.Configuration;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static com.invadermonky.omniwand.util.libs.LibConfigs.*;
@@ -16,6 +17,7 @@ import static com.invadermonky.omniwand.util.libs.LibConfigs.*;
 public class ConfigHandler {
     public static int omniwandId = 7987;
     public static boolean autoTransform = true;
+    public static boolean enableDebug = false;
     public static boolean sneakLocking = true;
     public static boolean restrictTooltip = false;
     public static String[] modAliases = new String[0];
@@ -57,7 +59,6 @@ public class ConfigHandler {
             JSONObject configJson = (JSONObject) new JSONParser().parse(new FileReader(configFile));
 
             JSONArray item = (JSONArray) configJson.get(Configuration.CATEGORY_ITEM);
-
             for (Object object : item) {
                 JSONObject obj = (JSONObject) object;
                 if (obj.containsKey(omniwandItemIdName)) {
@@ -66,10 +67,11 @@ public class ConfigHandler {
             }
 
             JSONArray general = (JSONArray) configJson.get(Configuration.CATEGORY_GENERAL);
-
-            //This is awful and I know it. But at this point idgaf
             for (Object object : general) {
                 JSONObject obj = (JSONObject) object;
+                if (obj.containsKey(enableDebugName)) {
+                    enableDebug = (Boolean) ((JSONObject) object).get(enableDebugName);
+                }
                 if (obj.containsKey(autoTransformName)) {
                     autoTransform = (Boolean) ((JSONObject) object).get(autoTransformName);
                 } else if (obj.containsKey(sneakLockingName)) {
@@ -87,7 +89,13 @@ public class ConfigHandler {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogHelper.error("Malformed config json detected. Regenerating configuration.");
+            try {
+                Files.delete(configFile.toPath());
+                init();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

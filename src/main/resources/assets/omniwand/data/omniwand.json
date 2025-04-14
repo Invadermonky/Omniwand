@@ -6,28 +6,23 @@
   ] ,
   "general": [
     {
-      "__comment": [
-        "Enables Omniwand auto-transform when looking at blocks."
-      ] ,
+      "__comment": "Enables debug mode. Placing items in a crafting table will output the mod name, item name and item id to the ForgeModLoader-client-0.log." ,
+      "Enable Debug": false
+    },
+    {
+      "__comment": "Enables Omniwand auto-transform when looking at blocks." ,
       "Auto Transform": true
     } ,
     {
-      "__comment": [
-        "Omniwand will not transform when sneaking. Set to true to invert this behavior."
-      ] ,
+      "__comment": "Omniwand will not transform when sneaking. Set to true to invert this behavior." ,
       "Sneak Locking": true
     } ,
     {
-      "__comment": [
-        "Restricts the Omniwand tooltip to only show items that used for auto-transforms."
-      ] ,
+      "__comment": "Restricts the Omniwand tooltip to only show items that used for auto-transforms." ,
       "Restrict Tooltip": false
     } ,
     {
-      "__comment": [
-        "List of mod aliases used for Omniwand transforming." ,
-        "  Format: modid=aliasmodid"
-      ] ,
+      "__comment": "List of mod aliases used for Omniwand transforming. Format: modid=aliasmodid" ,
       "Mod Aliases": [
         "AppEng.Blocks=AppEng.Tools",
         "BuildCraft|Builders=BuildCraft|Core" ,
@@ -35,7 +30,7 @@
         "BuildCraft|Robotics=BuildCraft|Core" ,
         "BuildCraft|Silicon=BuildCraft|Core" ,
         "BuildCraft|Transport=BuildCraft|Core" ,
-        "RedstoneArsenal=ThermalExpansion"
+        "Redstone Arsenal=ThermalExpansion"
       ]
     } ,
     {
@@ -46,12 +41,20 @@
         "name or the numerical item id as a string."
       ] ,
       "Transform Items": [
-        "19815" ,
-        "item.mfr.hammer" ,
-        "20256" ,
-        "item.wrenchItem" ,
+        "item.AppEng.Tools.QuartzWrench",
+        "item.BiblioDrill",
+        "item.botania:twigWand" ,
         "item.enderio.itemYetaWrench" ,
-        "4370"
+        "item.mfr.hammer" ,
+        "item.railcraft.tool.crowbar",
+        "item.railcraft.tool.crowbar.magic",
+        "item.railcraft.tool.crowbar.reinforced",
+        "item.redstonearsenal.tool.wrench",
+        "item.redstonearsenal.tool.battleWrench",
+        "item.thermalexpansion.tool" ,
+        "item.thermalexpansion.tool.invarBattleWrench",
+        "item.wrench",
+        "item.wrenchItem"
       ]
     } ,
     {
@@ -65,7 +68,7 @@
         "" ,
         "  Examples:" ,
         "    mod=tconstruct" ,
-        "    item.mfr.hammer" ,
+        "    item=item.mfr.hammer" ,
         "    item=12243" ,
         "    name=wrench" ,
         "" ,
@@ -79,6 +82,13 @@
         "    7. Whitelisted Names"
       ] ,
       "Item Whitelist": [
+        "item=item.beealyzer",
+        "item=item.enderio.itemMJReader",
+        "item=item.infuser",
+        "item=item.imprinter",
+        "item=item.railcraft.tool.mag.glass",
+        "item=item.railcraft.tool.whistle.tuner",
+        "item=item.ritualDiviner",
         "name=configurator" ,
         "name=crowbar" ,
         "name=hammer" ,
@@ -100,7 +110,7 @@
         "" ,
         "  Examples:" ,
         "    mod=tconstruct" ,
-        "    item.mfr.hammer" ,
+        "    item=item.mfr.hammer" ,
         "    item=12243" ,
         "    name=wrench" ,
         "" ,
@@ -114,7 +124,8 @@
         "    7. Whitelisted Names"
       ] ,
       "Item Blacklist": [
-        "mod=tconstruct"
+        "mod=tconstruct",
+        "item=item.arsmagica2:crystal_wrench"
       ]
     }
   ]
