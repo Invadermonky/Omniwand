@@ -138,4 +138,5 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
     public String toString() {
         return toJSONString();
     }
+
 }

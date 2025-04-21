@@ -35,6 +35,7 @@ public class ItemWand extends Item {
         return stack;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addInformation(ItemStack wandStack, EntityPlayer par2EntityPlayer, List tooltip, boolean par4) {
         NBTTagCompound wandData = WandHelper.getWandData(wandStack);
@@ -75,4 +76,5 @@ public class ItemWand extends Item {
             tooltip.add(I18n.getString("tooltip.omniwand:wand.ctrl"));
         }
     }
+
 }

@@ -19,4 +19,5 @@ public class LogHelper {
     public static void info(String obj) {
         LOG.info(obj);
     }
+
 }

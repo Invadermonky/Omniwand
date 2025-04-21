@@ -40,7 +40,8 @@ public class ConfigTags {
     }
 
     public static boolean isTransformItem(ItemStack stack) {
-        if (ItemHelper.isEmpty(stack)) return false;
+        if (ItemHelper.isEmpty(stack))
+            return false;
 
         String itemName = ItemHelper.getRegistryName(stack);
         String itemId = ItemHelper.getItemId(stack);

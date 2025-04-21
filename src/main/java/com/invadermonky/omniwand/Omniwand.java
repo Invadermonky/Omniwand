@@ -2,6 +2,7 @@ package com.invadermonky.omniwand;
 
 import com.invadermonky.omniwand.command.CommandReloadConfig;
 import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.network.PacketHandler;
 import com.invadermonky.omniwand.proxy.CommonProxy;
 import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.LogHelper;
@@ -11,13 +12,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkMod;
 
-@Mod(
-        modid = Omniwand.MOD_ID,
-        name = Omniwand.MOD_NAME,
-        version = Omniwand.MOD_VERSION,
-        acceptedMinecraftVersions = Omniwand.MC_VERSION
-)
+@Mod(modid = Omniwand.MOD_ID, name = Omniwand.MOD_NAME, version = Omniwand.MOD_VERSION, acceptedMinecraftVersions = Omniwand.MC_VERSION)
+@NetworkMod(clientSideRequired = true, channels = {Omniwand.MOD_ID}, packetHandler = PacketHandler.class)
 public class Omniwand {
     public static final String MOD_ID = "omniwand";
     public static final String MOD_NAME = "Omniwand";
@@ -37,6 +35,7 @@ public class Omniwand {
     public void preInit(FMLPreInitializationEvent event) {
         LogHelper.info("Starting Omniwand.");
         ConfigHandler.init();
+        PacketHandler.init();
         proxy.preInit(event);
         Registry.registerItems();
         LogHelper.debug("Finished preInit phase.");
@@ -59,4 +58,5 @@ public class Omniwand {
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandReloadConfig());
     }
+
 }

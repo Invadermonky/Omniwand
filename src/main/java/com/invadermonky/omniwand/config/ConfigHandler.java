@@ -41,6 +41,7 @@ public class ConfigHandler {
     private static void writeConfig(File configFile) {
         try {
             InputStream in = Omniwand.class.getResourceAsStream("/assets/" + Omniwand.MOD_ID + "/data/omniwand.json");
+            assert in != null;
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
             String line;
@@ -50,7 +51,7 @@ public class ConfigHandler {
             }
             writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -99,7 +100,7 @@ public class ConfigHandler {
         }
     }
 
-    private static String[] getStringArray(String key, JSONObject jsonObject) throws Exception {
+    private static String[] getStringArray(String key, JSONObject jsonObject) {
         if (jsonObject.containsKey(key)) {
             JSONArray jsonArray = (JSONArray) jsonObject.get(key);
             String[] array = new String[jsonArray.size()];
@@ -111,4 +112,5 @@ public class ConfigHandler {
             return new String[0];
         }
     }
+
 }

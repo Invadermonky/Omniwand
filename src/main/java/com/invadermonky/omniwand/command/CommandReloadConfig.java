@@ -32,4 +32,5 @@ public class CommandReloadConfig extends CommandBase {
     public int compareTo(@NotNull Object o) {
         return 0;
     }
+
 }

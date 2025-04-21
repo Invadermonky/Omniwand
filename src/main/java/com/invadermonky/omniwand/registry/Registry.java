@@ -20,12 +20,7 @@ public class Registry {
 
     public static void registerRecipes() {
         GameRegistry.addRecipe(new AttachmentRecipe());
-        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(
-                new ItemStack(OMNIWAND),
-                " DE", " OD", "O  ",
-                'D', "gemDiamond",
-                'E', new ItemStack(Item.enderPearl),
-                'O', new ItemStack(Block.obsidian)
-        ));
+        CraftingManager.getInstance().getRecipeList().add(new ShapedOreRecipe(new ItemStack(OMNIWAND), " DE", " OD", "O  ", 'D', "gemDiamond", 'E', new ItemStack(Item.enderPearl), 'O', new ItemStack(Block.obsidian)));
     }
+
 }

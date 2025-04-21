@@ -21,4 +21,5 @@ public class CommonProxy {
 
     public void openWandGui(EntityPlayer player, ItemStack stack) {
     }
+
 }

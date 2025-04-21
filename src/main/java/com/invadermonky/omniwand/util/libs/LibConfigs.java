@@ -10,4 +10,5 @@ public class LibConfigs {
     public static String transformItemsName = "Transform Items";
     public static String attachBlacklistName = "Item Blacklist";
     public static String attachWhitelistName = "Item Whitelist";
+
 }

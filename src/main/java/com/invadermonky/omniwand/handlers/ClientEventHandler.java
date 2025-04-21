@@ -1,7 +1,7 @@
 package com.invadermonky.omniwand.handlers;
 
 import com.invadermonky.omniwand.config.ConfigTags;
-import com.invadermonky.omniwand.network.MessageWandTransform;
+import com.invadermonky.omniwand.network.Packet101WandTransform;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -41,7 +41,7 @@ public class ClientEventHandler {
             if (!lookMod.isEmpty() && newStack != heldItem && !ItemHelper.areItemsEqual(newStack, heldItem)) {
                 int slot = playerSP.inventory.currentItem;
                 playerSP.inventory.setInventorySlotContents(slot, newStack);
-                PacketDispatcher.sendPacketToServer(new MessageWandTransform(lookMod, true));
+                PacketDispatcher.sendPacketToServer(new Packet101WandTransform(lookMod, true).build());
             }
         }
     }

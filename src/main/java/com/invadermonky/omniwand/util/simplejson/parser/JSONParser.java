@@ -51,7 +51,7 @@ public class JSONParser {
         if (statusStack.size() == 0)
             return -1;
         Integer status = (Integer) statusStack.getFirst();
-        return status.intValue();
+        return status;
     }
 
     /**
@@ -523,4 +523,5 @@ public class JSONParser {
         status = S_IN_ERROR;
         throw new ParseException(getPosition(), ParseException.ERROR_UNEXPECTED_TOKEN, token);
     }
+
 }

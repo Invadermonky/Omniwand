@@ -102,7 +102,7 @@ public class ItemHelper {
     }
 
     public static String getRegistryName(ItemStack stack) {
-        String itemUnloc = stack.getItem().getUnlocalizedName();
-        return itemUnloc != null && !itemUnloc.isEmpty() ? itemUnloc : stack.getItem().getUnlocalizedName(stack);
+        return stack.getUnlocalizedName();
     }
+
 }

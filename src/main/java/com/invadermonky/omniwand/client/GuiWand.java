@@ -1,6 +1,6 @@
 package com.invadermonky.omniwand.client;
 
-import com.invadermonky.omniwand.network.MessageWandTransform;
+import com.invadermonky.omniwand.network.Packet101WandTransform;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -157,7 +157,8 @@ public class GuiWand extends GuiScreen {
             for (String key : keys) {
                 NBTTagCompound compoundTag = wandData.getCompoundTag(key);
 
-                if (!ItemHelper.isEmpty(compoundTag)) stackMap.put(key, ItemStack.loadItemStackFromNBT(compoundTag));
+                if (!ItemHelper.isEmpty(compoundTag))
+                    stackMap.put(key, ItemStack.loadItemStackFromNBT(compoundTag));
             }
         }
 
@@ -172,18 +173,8 @@ public class GuiWand extends GuiScreen {
         int padding = 4;
         int extra = 2;
 
-        drawRect(
-                startX - padding,
-                startY - padding,
-                startX + iconSize * amountPerRow + padding,
-                startY + iconSize * rows + padding,
-                570425344);
-        drawRect(
-                startX - padding - extra,
-                startY - padding - extra,
-                startX + iconSize * amountPerRow + padding + extra,
-                startY + iconSize * rows + padding + extra,
-                570425344);
+        drawRect(startX - padding, startY - padding, startX + iconSize * amountPerRow + padding, startY + iconSize * rows + padding, 570425344);
+        drawRect(startX - padding - extra, startY - padding - extra, startX + iconSize * amountPerRow + padding + extra, startY + iconSize * rows + padding + extra, 570425344);
 
         ItemStack tooltipStack = null;
         String itemKey = "";
@@ -204,7 +195,8 @@ public class GuiWand extends GuiScreen {
                 ItemStack stack = stackMap.get(key);
                 if (!ItemHelper.isEmpty(stack)) {
                     FontRenderer font = stack.getItem().getFontRenderer(stack);
-                    if (font == null) font = this.fontRenderer;
+                    if (font == null)
+                        font = this.fontRenderer;
                     if (this.itemRenderer != null) {
                         this.itemRenderer.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
                     }
@@ -219,7 +211,7 @@ public class GuiWand extends GuiScreen {
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
-                PacketDispatcher.sendPacketToServer(new MessageWandTransform(itemKey, false));
+                PacketDispatcher.sendPacketToServer(new Packet101WandTransform(itemKey, false).build());
                 this.mc.displayGuiScreen(null);
             }
         }

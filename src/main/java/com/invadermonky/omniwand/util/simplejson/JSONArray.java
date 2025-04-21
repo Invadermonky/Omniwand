@@ -388,4 +388,5 @@ public class JSONArray extends ArrayList implements JSONAware, JSONStreamAware {
     public String toString() {
         return toJSONString();
     }
+
 }

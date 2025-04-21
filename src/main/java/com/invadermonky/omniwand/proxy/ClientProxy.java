@@ -18,6 +18,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void openWandGui(EntityPlayer player, ItemStack stack) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.thePlayer == player) mc.displayGuiScreen(new GuiWand(stack));
+        if (mc.thePlayer == player)
+            mc.displayGuiScreen(new GuiWand(stack));
     }
+
 }

@@ -103,8 +103,7 @@ public class WandHelper {
         // Setting new display name for stack
         if (newStack.getItem() != Registry.OMNIWAND) {
             setDisplayNameCache(newStack, newStack.getDisplayName());
-            String displayName = EnumChatFormatting.RESET + StatCollector.translateToLocalFormatted("omniwand:sudo_name",
-                    EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET);
+            String displayName = EnumChatFormatting.RESET + StatCollector.translateToLocalFormatted("omniwand:sudo_name", EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET);
             newStack.setItemName(displayName);
         }
 
@@ -120,7 +119,8 @@ public class WandHelper {
      * @return The reverted Omniwand item with the passed ItemStack removed.
      */
     public static ItemStack removeItemFromWand(ItemStack stack, boolean isBroken, @Nullable EntityItem entityItem) {
-        if (ItemHelper.isEmpty(stack) || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND) return stack;
+        if (ItemHelper.isEmpty(stack) || !isOmniwand(stack) || stack.getItem() == Registry.OMNIWAND)
+            return stack;
 
         // Getting removed stack
         ItemStack original = stack.copy();
@@ -143,7 +143,8 @@ public class WandHelper {
      * Does nothing if the item is the Omniwand.
      */
     public static void cleanStackTags(ItemStack stack) {
-        if (stack.getItem() == Registry.OMNIWAND) return;
+        if (stack.getItem() == Registry.OMNIWAND)
+            return;
 
         NBTTagCompound tag = getStackTag(stack);
         tag.removeTag(TAG_WAND_DATA);
@@ -151,10 +152,8 @@ public class WandHelper {
         tag.removeTag(TAG_DISPLAY_NAME_CACHE);
         tag.removeTag(TAG_IS_TRANSFORMING);
         tag.removeTag(TAG_AUTO_TRANSFORM);
-        String defaultName = stack.getItem()
-                .getItemStackDisplayName(stack);
-        if (stack.getDisplayName()
-                .equals(defaultName)) {
+        String defaultName = stack.getItem().getItemStackDisplayName(stack);
+        if (stack.getDisplayName().equals(defaultName)) {
             tag.removeTag("display");
         }
         if (ItemHelper.isEmpty(tag)) {
@@ -217,7 +216,9 @@ public class WandHelper {
     }
 
     public static NBTTagCompound getStackTag(ItemStack stack) {
-        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+        if (!stack.hasTagCompound())
+            stack.setTagCompound(new NBTTagCompound());
         return stack.getTagCompound();
     }
+
 }
