@@ -1,4 +1,10 @@
 # Omniwand Changelog
+## 1.12.2-2.0.1
+### Fixed
+- Fixed Omniwand event handler causing an infinite item/block exploit
+
+---
+
 ## 1.12.2-2.0.0
 ### IMPORTANT
 Internal handling for both the wand logic and the configuration has changed. Be sure to remove all items from existing wands 

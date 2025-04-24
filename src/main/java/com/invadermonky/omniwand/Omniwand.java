@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 public class Omniwand {
     public static final String MOD_ID = "omniwand";
     public static final String MOD_NAME = "Omniwand";
-    public static final String MOD_VERSION = "2.0.0";
+    public static final String MOD_VERSION = "2.0.1";
     public static final String MC_VERSION = "[1.12.2]";
 
     public static final String ProxyClientClass = "com.invadermonky.omniwand.proxy.ClientProxy";

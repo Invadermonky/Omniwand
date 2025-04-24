@@ -34,7 +34,7 @@ public class GuiWand extends GuiScreen {
         int color1 = 1347420415;
         int color2 = -267386864;
 
-        boolean lighting = GL11.glGetBoolean(2896);
+        boolean lighting = GL11.glGetBoolean(GL11.GL_LIGHTING);
         if (lighting)
             RenderHelper.disableStandardItemLighting();
 
@@ -121,8 +121,8 @@ public class GuiWand extends GuiScreen {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
-        GlStateManager.blendFunc(770, 771);
-        GlStateManager.shadeModel(7425);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
 
@@ -134,7 +134,7 @@ public class GuiWand extends GuiScreen {
         buff.pos(par3, par4, z).color(green_2, blue_2, alpha_2, red_2).endVertex();
 
         tessellator.draw();
-        GlStateManager.shadeModel(7424);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
