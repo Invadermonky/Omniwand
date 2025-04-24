@@ -14,10 +14,12 @@ public class CommonEventHandler {
     @SubscribeEvent
     public void onItemBroken(PlayerDestroyItemEvent event) {
         EntityPlayer player = event.entityPlayer;
-        ItemStack wandStack = WandHelper.removeItemFromWand(event.original, true, stack -> {
-        });
-        if (player != null && !player.inventory.addItemStackToInventory(wandStack)) {
-            player.entityDropItem(wandStack, player.eyeHeight / 2.0f);
+        if(WandHelper.isOmniwand(event.original)) {
+            ItemStack wandStack = WandHelper.removeItemFromWand(event.original, true, stack -> {
+            });
+            if (player != null && !player.inventory.addItemStackToInventory(wandStack)) {
+                player.entityDropItem(wandStack, player.eyeHeight / 2.0f);
+            }
         }
     }
 

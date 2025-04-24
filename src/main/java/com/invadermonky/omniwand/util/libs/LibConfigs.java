@@ -53,7 +53,6 @@ public class LibConfigs {
         "BuildCraft|Core:wrenchItem",
         "DraconicEvolution:wrench",
         "EnderIO:itemYetaWrench",
-        "ImmersiveEngineering:tool:0",
         "mekanism:configurator",
         "MineFactoryReloaded:hammer",
         "RedstoneArsenal:tool.wrenchFlux",
@@ -117,7 +116,6 @@ public class LibConfigs {
         ""
         """;
     public static String[] attachWhitelistDefault = new String[]{
-        "item=EnderIO:itemConduitProbe",
         "item=Botania:obedienceStick",
         "name=configurator",
         "name=crowbar",
