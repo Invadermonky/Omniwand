@@ -44,7 +44,7 @@ public class WandHelper {
     }
 
     public static boolean isTransformedWand(ItemStack stack) {
-        return !ItemHelper.isEmpty(getWandData(stack)) && stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack);
+        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !ItemHelper.isEmpty(getWandData(stack));
     }
 
     /**
@@ -164,7 +164,7 @@ public class WandHelper {
     }
 
     public static NBTTagCompound getWandData(ItemStack stack) {
-        return getStackTag(stack).getCompoundTag(TAG_WAND_DATA);
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(TAG_WAND_DATA) ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
     }
 
     public static void setWandData(ItemStack stack, NBTTagCompound tag) {
