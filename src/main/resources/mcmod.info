@@ -1,7 +1,7 @@
 [
 {
-  "modid": "omniwand",
-  "name": "Omniwand",
+  "modid": "${modid}",
+  "name": "${modname}",
   "description": "The wand to end all wands.",
   "version": "${version}",
   "mcversion": "${mcversion}",

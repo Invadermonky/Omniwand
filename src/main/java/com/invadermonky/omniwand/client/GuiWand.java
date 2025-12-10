@@ -1,7 +1,7 @@
 package com.invadermonky.omniwand.client;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.network.NetworkHandler;
+import com.invadermonky.omniwand.network.messages.MessageGuiTransform;
 import com.invadermonky.omniwand.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -193,12 +193,12 @@ public class GuiWand extends GuiScreen {
         }
 
         if (!tooltipStack.isEmpty()) {
-            String name = WandHelper.getDisplayNameCache(tooltipStack);
+            String name = tooltipStack.getDisplayName();
             String mod = TextFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
-                Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));
+                NetworkHandler.INSTANCE.sendToServer(new MessageGuiTransform(itemKey));
                 this.mc.displayGuiScreen(null);
             }
         }

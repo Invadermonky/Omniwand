@@ -1,5 +1,6 @@
 package com.invadermonky.omniwand;
 
+import com.invadermonky.omniwand.network.NetworkHandler;
 import com.invadermonky.omniwand.proxy.CommonProxy;
 import com.invadermonky.omniwand.util.LogHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -7,7 +8,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(
         modid = Omniwand.MOD_ID,
@@ -16,15 +16,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
         acceptedMinecraftVersions = Omniwand.MC_VERSION
 )
 public class Omniwand {
-    public static final String MOD_ID = "omniwand";
-    public static final String MOD_NAME = "Omniwand";
-    public static final String MOD_VERSION = "2.0.1";
+    public static final String MOD_ID = Tags.MOD_ID;
+    public static final String MOD_NAME = Tags.MOD_NAME;
+    public static final String MOD_VERSION = Tags.VERSION;
     public static final String MC_VERSION = "[1.12.2]";
 
     public static final String ProxyClientClass = "com.invadermonky.omniwand.proxy.ClientProxy";
     public static final String ProxyServerClass = "com.invadermonky.omniwand.proxy.CommonProxy";
-
-    public static SimpleNetworkWrapper network;
 
     @Mod.Instance(MOD_ID)
     public static Omniwand INSTANCE;
@@ -36,6 +34,7 @@ public class Omniwand {
     public void preInit(FMLPreInitializationEvent event) {
         LogHelper.info("Starting Omniwand.");
         proxy.preInit(event);
+        NetworkHandler.init();
         LogHelper.debug("Finished preInit phase.");
     }
 

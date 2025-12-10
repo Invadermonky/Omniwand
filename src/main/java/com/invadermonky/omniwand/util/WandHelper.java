@@ -7,8 +7,6 @@ import com.invadermonky.omniwand.registry.Registry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
 
 import java.util.function.Consumer;
@@ -65,10 +63,6 @@ public class WandHelper {
 
 
         if (!removeStack) {
-            //Retrieving and resetting display name from cached display name
-            String displayName = getDisplayNameCache(stack);
-            stack.setStackDisplayName(displayName);
-
             //Cleaning Omniwand data off the transforming stack
             cleanStackTags(stack);
 
@@ -94,13 +88,6 @@ public class WandHelper {
         setAutoMode(newStack, newStack.getItem() == Registry.OMNIWAND);
         setIsTransforming(newStack, newStack.getItem() != Registry.OMNIWAND);
 
-        //Setting new display name for stack
-        if (newStack.getItem() != Registry.OMNIWAND) {
-            setDisplayNameCache(newStack, newStack.getDisplayName());
-            String displayName = TextFormatting.RESET + new TextComponentTranslation("omniwand:sudo_name", TextFormatting.GREEN + newStack.getDisplayName() + TextFormatting.RESET).getFormattedText();
-            newStack.setStackDisplayName(displayName);
-        }
-
         return newStack;
     }
 
@@ -121,7 +108,6 @@ public class WandHelper {
         ItemStack wandStack = getTransformedStack(stack, Omniwand.MOD_ID, true);
 
         if (!isBroken) {
-            original.setStackDisplayName(getDisplayNameCache(original));
             cleanStackTags(original);
             consumer.accept(original);
         }
@@ -143,13 +129,8 @@ public class WandHelper {
         NBTTagCompound tag = getStackTag(stack);
         tag.removeTag(TAG_WAND_DATA);
         tag.removeTag(TAG_MOD_SLOT);
-        tag.removeTag(TAG_DISPLAY_NAME_CACHE);
         tag.removeTag(TAG_IS_TRANSFORMING);
         tag.removeTag(TAG_AUTO_TRANSFORM);
-        String defaultName = stack.getItem().getItemStackDisplayName(stack);
-        if (stack.getDisplayName().equals(defaultName)) {
-            tag.removeTag("display");
-        }
         if (tag.isEmpty()) {
             stack.setTagCompound(null);
         } else {
@@ -157,8 +138,21 @@ public class WandHelper {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static NBTTagCompound getWandData(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(TAG_WAND_DATA) ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
+        return stack.getTagCompound() != null && stack.getTagCompound().hasKey(TAG_WAND_DATA) ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
     }
 
     public static void setWandData(ItemStack stack, NBTTagCompound tag) {
@@ -169,7 +163,7 @@ public class WandHelper {
      * Gets the current Omniwand auto transform mode. This will cause the wand to shift based on what the player is
      * looking at.
      */
-    public static boolean getAutoMode(ItemStack stack) {
+    public static boolean isAutoMode(ItemStack stack) {
         if (!getStackTag(stack).hasKey(TAG_AUTO_TRANSFORM) && stack.getItem() == Registry.OMNIWAND)
             getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, ConfigHandler.autoTransform);
         return getStackTag(stack).getBoolean(TAG_AUTO_TRANSFORM);
@@ -185,20 +179,11 @@ public class WandHelper {
 
 
     public static boolean getIsTransforming(ItemStack stack) {
-        return stack.hasTagCompound() && getStackTag(stack).hasKey(TAG_IS_TRANSFORMING);
+        return stack.getTagCompound() != null && stack.getTagCompound().getBoolean(TAG_IS_TRANSFORMING);
     }
 
     public static void setIsTransforming(ItemStack stack, boolean isTransforming) {
         getStackTag(stack).setBoolean(TAG_IS_TRANSFORMING, isTransforming);
-    }
-
-    public static String getDisplayNameCache(ItemStack stack) {
-        NBTTagCompound tag = getStackTag(stack);
-        return tag.hasKey(TAG_DISPLAY_NAME_CACHE) ? tag.getString(TAG_DISPLAY_NAME_CACHE) : stack.getDisplayName();
-    }
-
-    public static void setDisplayNameCache(ItemStack stack, String displayName) {
-        getStackTag(stack).setString(TAG_DISPLAY_NAME_CACHE, displayName);
     }
 
     public static String getModSlot(ItemStack stack) {

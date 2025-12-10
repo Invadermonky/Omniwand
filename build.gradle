@@ -10,6 +10,8 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
+mod_id = project.mod_id
+mod_name = project.mod_name
 version = project.mod_version
 group = project.maven_group
 archivesBaseName = project.archives_base_name
@@ -66,8 +68,9 @@ minecraft {
     // Add any properties you want to swap out for a dynamic value at build time here
     // Any properties here will be added to a class at build time, the name can be configured below
     // Example:
-    // injectedTags.put('VERSION', project.version)
-    // injectedTags.put('MOD_ID', project.archives_base_name)
+    injectedTags.put('MOD_ID', project.mod_id)
+    injectedTags.put('MOD_NAME', project.mod_name)
+    injectedTags.put('VERSION', project.version)
 }
 
 // Generate a group.archives_base_name.Tags class
@@ -103,10 +106,14 @@ dependencies {
         implementation 'zone.rong:mixinbooter:7.1'
     }
 
-    // Example of deobfuscating a dependency
-    // implementation rfg.deobf('curse.maven:had-enough-items-557549:4543375')
+    compileOnly 'org.jetbrains:annotations:20.1.0'
 
-    implementation 'org.jetbrains:annotations:20.1.0'
+    // Example of deobfuscating a dependency
+    implementation rfg.deobf("curse.maven:had-enough-items-557549:6963093")
+
+    implementation rfg.deobf("curse.maven:autoreglib-250363:2746011")
+    implementation rfg.deobf("curse.maven:akashic-tome-250577:2648656")
+
 
     if (project.use_mixins.toBoolean()) {
         // Change your mixin refmap name here:
@@ -136,6 +143,8 @@ if (project.use_access_transformer.toBoolean()) {
 
 processResources {
     // This will ensure that this task is redone when the versions change
+    inputs.property 'modid', project.mod_id
+    inputs.property 'modname', project.mod_name
     inputs.property 'version', project.version
     inputs.property 'mcversion', project.minecraft.version
     
@@ -143,6 +152,8 @@ processResources {
     filesMatching(['mcmod.info', 'pack.mcmeta']) { fcd ->
         // Replace version and mcversion
         fcd.expand (
+                'modid': project.mod_id,
+                'modname': project.mod_name,
                 'version': project.version,
                 'mcversion': project.minecraft.version
         )

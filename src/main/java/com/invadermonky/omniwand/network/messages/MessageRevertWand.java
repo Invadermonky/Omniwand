@@ -1,4 +1,4 @@
-package com.invadermonky.omniwand.network;
+package com.invadermonky.omniwand.network.messages;
 
 import com.invadermonky.omniwand.Omniwand;
 import com.invadermonky.omniwand.registry.Registry;
