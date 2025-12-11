@@ -6,6 +6,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatMessageComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
+
 public class CommandReloadConfig extends CommandBase {
     @Override
     public int getRequiredPermissionLevel() {
@@ -14,7 +17,7 @@ public class CommandReloadConfig extends CommandBase {
 
     @Override
     public String getCommandName() {
-        return "omniwand_reload";
+        return "omniwand";
     }
 
     @Override
@@ -33,4 +36,8 @@ public class CommandReloadConfig extends CommandBase {
         return 0;
     }
 
+    @Override
+    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] par2ArrayOfStr) {
+        return Collections.singletonList("reload");
+    }
 }

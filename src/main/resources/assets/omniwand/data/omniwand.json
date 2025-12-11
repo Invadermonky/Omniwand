@@ -14,7 +14,7 @@
       "Auto Transform": true
     } ,
     {
-      "__comment": "Omniwand will not transform when sneaking. Set to true to invert this behavior." ,
+      "__comment": "Omniwand will not transform when sneaking. Set to false to invert this behavior." ,
       "Sneak Locking": true
     } ,
     {

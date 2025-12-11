@@ -1,7 +1,6 @@
 package com.invadermonky.omniwand.util;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.registry.Registry;
 import cpw.mods.fml.common.Loader;
@@ -10,8 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 import org.jetbrains.annotations.Nullable;
 
 import static com.invadermonky.omniwand.util.libs.LibTags.*;
@@ -39,12 +36,20 @@ public class WandHelper {
         return getModOrAlias(ItemHelper.getOwnerMod(block));
     }
 
+    /**
+     * Checks if the ItemStack is an Omniwand. Returns true if the item is the Omniwand or is a transformed
+     * Omniwand.
+     */
     public static boolean isOmniwand(ItemStack stack) {
         return !ItemHelper.isEmpty(stack) && (stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack));
     }
 
+    /**
+     * Checks if the ItemStack is a transformed Omniwand. Returns true if the item is a transformed Omniwand
+     * and false if the stack is the Omniwand item.
+     */
     public static boolean isTransformedWand(ItemStack stack) {
-        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !ItemHelper.isEmpty(getWandData(stack));
+        return !ItemHelper.isEmpty(stack) && stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !ItemHelper.isEmpty(getWandData(stack));
     }
 
     /**
@@ -71,10 +76,6 @@ public class WandHelper {
             mod = Omniwand.MOD_ID;
 
         if (!removeStack) {
-            // Retrieving and resetting display name from cached display name
-            String displayName = getDisplayNameCache(stack);
-            stack.setItemName(displayName);
-
             // Cleaning Omniwand data off the transforming stack
             cleanStackTags(stack);
 
@@ -100,13 +101,6 @@ public class WandHelper {
         setAutoMode(newStack, newStack.getItem() == Registry.OMNIWAND);
         setIsTransforming(newStack, newStack.getItem() != Registry.OMNIWAND);
 
-        // Setting new display name for stack
-        if (newStack.getItem() != Registry.OMNIWAND) {
-            setDisplayNameCache(newStack, newStack.getDisplayName());
-            String displayName = EnumChatFormatting.RESET + StatCollector.translateToLocalFormatted("omniwand:sudo_name", EnumChatFormatting.GREEN + newStack.getDisplayName() + EnumChatFormatting.RESET);
-            newStack.setItemName(displayName);
-        }
-
         return newStack;
     }
 
@@ -127,7 +121,6 @@ public class WandHelper {
         ItemStack wandStack = getTransformedStack(stack, Omniwand.MOD_ID, true);
 
         if (!isBroken && entityItem != null) {
-            original.setItemName(getDisplayNameCache(original));
             cleanStackTags(original);
             entityItem.setEntityItemStack(original);
         }
@@ -149,7 +142,6 @@ public class WandHelper {
         NBTTagCompound tag = getStackTag(stack);
         tag.removeTag(TAG_WAND_DATA);
         tag.removeTag(TAG_MOD_SLOT);
-        tag.removeTag(TAG_DISPLAY_NAME_CACHE);
         tag.removeTag(TAG_IS_TRANSFORMING);
         tag.removeTag(TAG_AUTO_TRANSFORM);
         String defaultName = stack.getItem().getItemStackDisplayName(stack);
@@ -164,7 +156,7 @@ public class WandHelper {
     }
 
     public static NBTTagCompound getWandData(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(TAG_WAND_DATA) ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
+        return stack.getTagCompound() != null ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
     }
 
     public static void setWandData(ItemStack stack, NBTTagCompound tag) {
@@ -175,35 +167,20 @@ public class WandHelper {
      * Gets the current Omniwand auto transform mode. This will cause the wand to shift based on what the player is
      * looking at.
      */
-    public static boolean getAutoMode(ItemStack stack) {
-        if (!getStackTag(stack).hasKey(TAG_AUTO_TRANSFORM) && stack.getItem() == Registry.OMNIWAND)
-            getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, ConfigHandler.autoTransform);
-        return getStackTag(stack).getBoolean(TAG_AUTO_TRANSFORM);
+    public static boolean isAutoMode(ItemStack stack) {
+        return stack.getItem() == Registry.OMNIWAND || (stack.getTagCompound() != null && stack.getTagCompound().getBoolean(TAG_AUTO_TRANSFORM));
     }
 
-    /**
-     * Sets the auto-transform mod for the wand. This automatically detects if auto-transform is disabled in the
-     * configs and adjusts accordingly.
-     */
     public static void setAutoMode(ItemStack stack, boolean autoMode) {
-        getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, autoMode && ConfigHandler.autoTransform);
+        getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, autoMode);
     }
 
     public static boolean getIsTransforming(ItemStack stack) {
-        return stack.hasTagCompound() && getStackTag(stack).hasKey(TAG_IS_TRANSFORMING);
+        return stack.getTagCompound() != null && stack.getTagCompound().getBoolean(TAG_IS_TRANSFORMING);
     }
 
     public static void setIsTransforming(ItemStack stack, boolean isTransforming) {
         getStackTag(stack).setBoolean(TAG_IS_TRANSFORMING, isTransforming);
-    }
-
-    public static String getDisplayNameCache(ItemStack stack) {
-        NBTTagCompound tag = getStackTag(stack);
-        return tag.hasKey(TAG_DISPLAY_NAME_CACHE) ? tag.getString(TAG_DISPLAY_NAME_CACHE) : stack.getDisplayName();
-    }
-
-    public static void setDisplayNameCache(ItemStack stack, String displayName) {
-        getStackTag(stack).setString(TAG_DISPLAY_NAME_CACHE, displayName);
     }
 
     public static String getModSlot(ItemStack stack) {

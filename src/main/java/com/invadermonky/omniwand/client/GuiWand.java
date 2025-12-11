@@ -206,7 +206,7 @@ public class GuiWand extends GuiScreen {
         }
 
         if (!ItemHelper.isEmpty(tooltipStack)) {
-            String name = WandHelper.getDisplayNameCache(tooltipStack);
+            String name = tooltipStack.getDisplayName();
             String mod = EnumChatFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
