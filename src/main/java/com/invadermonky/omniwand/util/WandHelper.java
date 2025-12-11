@@ -1,7 +1,6 @@
 package com.invadermonky.omniwand.util;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.config.ConfigHandler;
 import com.invadermonky.omniwand.config.ConfigTags;
 import com.invadermonky.omniwand.registry.Registry;
 import net.minecraft.block.state.IBlockState;
@@ -30,12 +29,20 @@ public class WandHelper {
         return getModOrAlias(state.getBlock().getRegistryName().getNamespace());
     }
 
+    /**
+     * Checks if the ItemStack is an Omniwand. Returns true if the item is the Omniwand or is a transformed
+     * Omniwand.
+     */
     public static boolean isOmniwand(ItemStack stack) {
-        return stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack);
+        return !stack.isEmpty() && (stack.getItem() == Registry.OMNIWAND || isTransformedWand(stack));
     }
 
+    /**
+     * Checks if the ItemStack is a transformed Omniwand. Returns true if the item is a transformed Omniwand
+     * and false if the stack is the Omniwand item.
+     */
     public static boolean isTransformedWand(ItemStack stack) {
-        return stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !getWandData(stack).isEmpty();
+        return !stack.isEmpty() && stack.getItem() != Registry.OMNIWAND && getIsTransforming(stack) && !getWandData(stack).isEmpty();
     }
 
     /**
@@ -137,46 +144,22 @@ public class WandHelper {
             stack.setTagCompound(tag);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
     public static NBTTagCompound getWandData(ItemStack stack) {
-        return stack.getTagCompound() != null && stack.getTagCompound().hasKey(TAG_WAND_DATA) ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
+        return stack.getTagCompound() != null ? getStackTag(stack).getCompoundTag(TAG_WAND_DATA) : new NBTTagCompound();
     }
 
     public static void setWandData(ItemStack stack, NBTTagCompound tag) {
         getStackTag(stack).setTag(TAG_WAND_DATA, tag);
     }
 
-    /**
-     * Gets the current Omniwand auto transform mode. This will cause the wand to shift based on what the player is
-     * looking at.
-     */
     public static boolean isAutoMode(ItemStack stack) {
-        if (!getStackTag(stack).hasKey(TAG_AUTO_TRANSFORM) && stack.getItem() == Registry.OMNIWAND)
-            getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, ConfigHandler.autoTransform);
-        return getStackTag(stack).getBoolean(TAG_AUTO_TRANSFORM);
+        return stack.getItem() == Registry.OMNIWAND || (stack.getTagCompound() != null && stack.getTagCompound().getBoolean(TAG_AUTO_TRANSFORM));
     }
 
-    /**
-     * Sets the auto-transform mod for the wand. This automatically detects if auto-transform is disabled in the
-     * configs and adjusts accordingly.
-     */
     public static void setAutoMode(ItemStack stack, boolean autoMode) {
-        getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, autoMode && ConfigHandler.autoTransform);
+        getStackTag(stack).setBoolean(TAG_AUTO_TRANSFORM, autoMode);
     }
-
 
     public static boolean getIsTransforming(ItemStack stack) {
         return stack.getTagCompound() != null && stack.getTagCompound().getBoolean(TAG_IS_TRANSFORMING);
