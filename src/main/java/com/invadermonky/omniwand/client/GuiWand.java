@@ -1,7 +1,7 @@
 package com.invadermonky.omniwand.client;
 
-import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.network.MessageGuiTransform;
+import com.invadermonky.omniwand.network.NetworkHandler;
+import com.invadermonky.omniwand.network.messages.MessageTransformWand;
 import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -227,12 +227,12 @@ public class GuiWand extends GuiScreen {
         }
 
         if (!ItemHelper.isEmpty(tooltipStack)) {
-            String name = WandHelper.getDisplayNameCache(tooltipStack);
+            String name = tooltipStack.getDisplayName();
             String mod = EnumChatFormatting.GRAY + WandHelper.getModName(WandHelper.getModOrAlias(tooltipStack));
             renderTooltip(mouseX, mouseY, Arrays.asList(name, mod));
 
             if (Mouse.isButtonDown(0)) {
-                Omniwand.network.sendToServer(new MessageGuiTransform(itemKey));
+                NetworkHandler.INSTANCE.sendToServer(new MessageTransformWand(itemKey, false));
                 this.mc.displayGuiScreen(null);
             }
         }

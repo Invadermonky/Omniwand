@@ -1,6 +1,7 @@
 package com.invadermonky.omniwand;
 
 import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.network.NetworkHandler;
 import com.invadermonky.omniwand.proxy.CommonProxy;
 import com.invadermonky.omniwand.registry.Registry;
 import com.invadermonky.omniwand.util.LogHelper;
@@ -40,6 +41,7 @@ public class Omniwand {
     public void preInit(FMLPreInitializationEvent event) {
         LogHelper.info("Starting Omniwand.");
         ConfigHandler.init();
+        NetworkHandler.init();
         proxy.preInit(event);
         Registry.registerItems();
         LogHelper.debug("Finished preInit phase.");

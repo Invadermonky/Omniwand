@@ -12,4 +12,4 @@ tooltip.omniwand:wand.ctrl.3=Sneak + Drop transformed item to
 tooltip.omniwand:wand.ctrl.4=remove from wand
 
 # Other
-omniwand:sudo_name=Omniwand (%s)
+omniwand:sudo_name=Omniwand §r(§a%s§r)
