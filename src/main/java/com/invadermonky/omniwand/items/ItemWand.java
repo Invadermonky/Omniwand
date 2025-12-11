@@ -49,7 +49,7 @@ public class ItemWand extends Item {
             for (String key : keys) {
                 ItemStack storedItem = ItemStack.loadItemStackFromNBT(wandData.getCompoundTag(key));
                 if (!ItemHelper.isEmpty(storedItem)) {
-                    String name = WandHelper.getDisplayNameCache(storedItem);
+                    String name = storedItem.getDisplayName();
                     String mod = WandHelper.getModOrAlias(storedItem);
                     if (ConfigHandler.restrictTooltip) {
                         if (mod.equals(key) && ConfigTags.isTransformItem(storedItem)) {

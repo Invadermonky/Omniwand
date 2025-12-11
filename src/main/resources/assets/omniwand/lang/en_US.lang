@@ -7,4 +7,4 @@ item.omniwand:wand.name=Omniwand
 tooltip.omniwand:shiftinfo=Hold §bSHIFT§7 for details
 
 # Other
-omniwand:sudo_name=Omniwand (%s)
+omniwand:sudo_name=Omniwand §r(§a%s§r)

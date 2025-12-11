@@ -1,6 +1,7 @@
 package com.invadermonky.omniwand;
 
 import com.invadermonky.omniwand.config.ConfigHandler;
+import com.invadermonky.omniwand.network.NetworkHandler;
 import com.invadermonky.omniwand.proxy.CommonProxy;
 import com.invadermonky.omniwand.util.LogHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +40,7 @@ public class Omniwand {
     public void preInit(FMLPreInitializationEvent event) {
         LogHelper.info("Starting Omniwand.");
         ConfigHandler.init();
+        NetworkHandler.init();
         proxy.preInit(event);
         LogHelper.debug("Finished preInit phase.");
     }
