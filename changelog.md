@@ -1,4 +1,10 @@
 # Omniwand Changelog
+## 1.12.2-2.0.2
+- Fixed translation with wand when transforming or reverting
+- Fixed a couple of weird network handling issues
+
+---
+
 ## 1.12.2-2.0.1
 ### Fixed
 - Fixed Omniwand event handler causing an infinite item/block exploit
@@ -35,5 +41,5 @@ before updating and resetting your configuration after updating.
 
 ---
 
-## Omniwand 1.12.2-1.0.0
+## 1.12.2-1.0.0
 - Initial Release
