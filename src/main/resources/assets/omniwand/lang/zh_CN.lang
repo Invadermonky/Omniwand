@@ -4,7 +4,12 @@
 item.omniwand:wand.name=全能魔杖
 
 # Tooltips
-tooltip.omniwand:shiftinfo=按住§bSHIFT§7以查看更多细节
+tooltip.omniwand:wand.ctrl=按住§bCTRL§7以查看更多操作
+tooltip.omniwand:wand.shift=按住§bSHIFT§7以查看更多细节
+tooltip.omniwand:wand.ctrl.1=合成以添加物品至魔杖
+tooltip.omniwand:wand.ctrl.2=丢弃已转换物品可还原魔杖
+tooltip.omniwand:wand.ctrl.3=潜行+丢弃已转换物品
+tooltip.omniwand:wand.ctrl.4=可从魔杖中移除物品
 
 # Other
 omniwand:sudo_name=全能魔杖 §r(§a%s§r)
