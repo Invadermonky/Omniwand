@@ -39,9 +39,9 @@ public class MessageTransformWand implements IMessage {
         buf.writeBoolean(this.autoMode);
     }
 
-    public static class MsgHandler implements IMessageHandler<MessageTransformWand, MessageSetStackInSlotClient> {
+    public static class MsgHandler implements IMessageHandler<MessageTransformWand, IMessage> {
         @Override
-        public MessageSetStackInSlotClient onMessage(MessageTransformWand message, MessageContext ctx) {
+        public IMessage onMessage(MessageTransformWand message, MessageContext ctx) {
             AtomicReference<ItemStack> newStack = new AtomicReference<>(ItemStack.EMPTY);
             AtomicReference<EnumHand> hand = new AtomicReference<>(EnumHand.MAIN_HAND);
             AtomicBoolean hasWand = new AtomicBoolean(false);
@@ -65,7 +65,8 @@ public class MessageTransformWand implements IMessage {
                     }
                 }
             });
-            return hasWand.get() ? new MessageSetStackInSlotClient(newStack.get(), hand.get()) : null;
+            return null;
+            //return hasWand.get() ? new MessageSetStackInSlotClient(newStack.get(), hand.get()) : null;
         }
     }
 }
