@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 public class Omniwand {
     public static final String MOD_ID = "omniwand";
     public static final String MOD_NAME = "Omniwand";
-    public static final String MOD_VERSION = "1.0.0";
+    public static final String MOD_VERSION = "1.0.1";
     public static final String MC_VERSION = "[1.10.2]";
     public static final String GUI_FACTORY = "com.invadermonky." + MOD_ID + ".client.GuiFactory";
 
