@@ -1,4 +1,9 @@
 # Omniwand Changelog
+## 1.12.2-2.0.3
+- Fixed rare server desync crash
+
+---
+
 ## 1.12.2-2.0.2
 - Fixed translation with wand when transforming or reverting
 - Fixed a couple of weird network handling issues
