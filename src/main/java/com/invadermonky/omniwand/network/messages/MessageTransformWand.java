@@ -1,7 +1,6 @@
 package com.invadermonky.omniwand.network.messages;
 
 import com.invadermonky.omniwand.Omniwand;
-import com.invadermonky.omniwand.util.ItemHelper;
 import com.invadermonky.omniwand.util.WandHelper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -36,9 +35,9 @@ public class MessageTransformWand implements IMessage {
         buf.writeBoolean(this.autoMode);
     }
 
-    public static class MsgHandler implements IMessageHandler<MessageTransformWand, MessageSetStackInSlotClient> {
+    public static class MsgHandler implements IMessageHandler<MessageTransformWand, IMessage> {
         @Override
-        public MessageSetStackInSlotClient onMessage(MessageTransformWand message, MessageContext ctx) {
+        public IMessage onMessage(MessageTransformWand message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             ItemStack stack = player.getHeldItem();
             ItemStack newStack = null;
@@ -51,7 +50,7 @@ public class MessageTransformWand implements IMessage {
                     player.setCurrentItemOrArmor(0, newStack);
                 }
             }
-            return !ItemHelper.isEmpty(newStack) ? new MessageSetStackInSlotClient(newStack) : null;
+            return null;
         }
     }
 }
