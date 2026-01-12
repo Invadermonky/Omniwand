@@ -19,7 +19,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 public class Omniwand {
     public static final String MOD_ID = "omniwand";
     public static final String MOD_NAME = "Omniwand";
-    public static final String MOD_VERSION = "1.0.0";
+    public static final String MOD_VERSION = "1.0.1";
     public static final String MC_VERSION = "[1.6.4]";
 
     public static final String ProxyClientClass = "com.invadermonky." + MOD_ID + ".proxy.ClientProxy";
