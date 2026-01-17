@@ -63,7 +63,7 @@ minecraft {
     extraRunJvmArguments.addAll(args)
 
     // Include and use dependencies' Access Transformer files
-    useDependencyAccessTransformers = true
+    useDependencyAccessTransformers = false
     
     // Add any properties you want to swap out for a dynamic value at build time here
     // Any properties here will be added to a class at build time, the name can be configured below
