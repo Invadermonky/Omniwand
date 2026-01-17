@@ -8,7 +8,6 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.world.World;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -45,13 +44,7 @@ public class CommonEventHandler {
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         EntityPlayer player = event.getEntityPlayer();
         ItemStack stack = player.getHeldItem(event.getHand());
-        World world = player.world;
-        if(event.getTarget() instanceof EntityItemFrame && WandHelper.isOmniwand(stack) && !player.isCreative()) {
-            EntityItemFrame itemFrame = (EntityItemFrame) event.getTarget();
-            if(!world.isRemote && itemFrame.getDisplayedItem().isEmpty()) {
-                itemFrame.setDisplayedItem(stack);
-                stack.shrink(1);
-            }
+        if(event.getTarget() instanceof EntityItemFrame && WandHelper.isTransformedWand(stack)) {
             event.setCancellationResult(EnumActionResult.SUCCESS);
             event.setCanceled(true);
         }

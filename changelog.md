@@ -1,4 +1,9 @@
 # Omniwand Changelog
+## 1.12.2-2.0.4
+- Fixed Item Frame dupe
+
+---
+
 ## 1.12.2-2.0.3
 - Fixed rare server desync crash
 
